@@ -37,16 +37,19 @@
   /* Setup your scene here */
   self.backgroundColor = [SKColor lightGrayColor];
   self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(self.size.width - 50, self.size.height - 80)];
-  self.playground.position = CGPointMake(self.size.width/2, self.size.height/2 + 30);
+  self.playground.position = CGPointMake(self.size.width/2, self.size.height/2 + 20);
   [self addChild:self.playground];
   
-  [self generateGraph:10];
-  NSLog(@"%@", [self.edges objectForKey:self.vertices[0]])
+  [self generateGraph:6];
+  [self drawEdges];
+//  NSLog(@"%@", [self.edges objectForKey:self.vertices[0]])
 ;
   
 }
 
-#define SPREAD_FACTOR 30
+#pragma mark Graph Creation
+
+#define SPREAD_FACTOR 50
 
 -(void)generateGraph:(NSInteger)numOfVertices {
   
@@ -73,9 +76,52 @@
     }
   }
   [[self.edges objectForKey:self.vertices[0]] addObject:self.vertices[numOfVertices - 1]];
-  [[self.edges objectForKey:self.vertices[numOfVertices - 1]] addObject:self.vertices[0]];  
+  [[self.edges objectForKey:self.vertices[numOfVertices - 1]] addObject:self.vertices[0]];
+  
+  //noise edges
+  
+  NSInteger numOfNoiseEdges = numOfVertices / 2;
+  
+  for (int i = 0; i < numOfNoiseEdges; i++) {
+    SKSpriteNode *originVertex = self.vertices[i];
+    NSMutableArray *adjacent = [self.edges objectForKey:originVertex];
+    
+    while (1) {
+      SKSpriteNode *newAdjacent = self.vertices[arc4random_uniform(numOfVertices)];
+      if (![adjacent containsObject:newAdjacent]) {
+        [adjacent addObject:newAdjacent];
+        [[self.edges objectForKey:newAdjacent] addObject:originVertex];
+        break;
+      }
+    }
+    
+    
+    
+  }
 }
 
+-(void)drawEdges {
+  
+  for (SKSpriteNode *vertex in self.edges) {
+//    CGPoint originPoint = [self convertPoint:vertex.position fromNode:self.playground];
+    CGPoint originPoint = vertex.position;
+    for (SKSpriteNode *adjacent in [self.edges objectForKey:vertex]) {
+//      CGPoint destinationPoint = [self convertPoint:adjacent.position fromNode:self.playground];
+      CGPoint destinationPoint = adjacent.position;
+      SKShapeNode *edge = [SKShapeNode node];
+      CGMutablePathRef pathToDraw = CGPathCreateMutable();
+      CGPathMoveToPoint(pathToDraw, NULL, originPoint.x, originPoint.y);
+     
+      CGPathAddLineToPoint(pathToDraw, NULL, destinationPoint.x, destinationPoint.y);
+      edge.path = pathToDraw;
+      [edge setStrokeColor:[SKColor blackColor]];
+      [self.playground addChild:edge];
+    }
+  }
+}
+
+
+#pragma mark Interaction
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   /* Called when a touch begins */
