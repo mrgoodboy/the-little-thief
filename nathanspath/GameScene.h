@@ -10,4 +10,6 @@
 
 @interface GameScene : SKScene
 
+@property NSInteger level;
+
 @end
