@@ -49,16 +49,21 @@
 
 -(void)didMoveToView:(SKView *)view {
   /* Setup your scene here */
-  self.backgroundColor = [SKColor lightGrayColor];
-  self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(self.size.width - 50, self.size.height - 80)];
-  self.playground.position = CGPointMake(self.size.width/2, self.size.height/2 + 20);
+  
+  [self setBackground];
+  
+  [self addBackButton];
+  
+  self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(self.size.width - 50, self.size.height - 50 - self.backButton.size.height)];
+  self.playground.position = CGPointMake(self.size.width/2, self.size.height/2 + self.backButton.size.height/2);
   [self addChild:self.playground];
   
-  [self generateGraph:self.level];
+  
+  [self generateGraph:self.level + 3];
   [self drawEdges];
   
   [self addNathan];
-  [self addBackButton];
+  
   
 }
 
@@ -70,10 +75,28 @@
 }
 
 -(void)addBackButton {
-  self.backButton = [[SKSpriteNode alloc] initWithColor:[SKColor brownColor] size:CGSizeMake(self.size.width/2, 30.0)];
-  self.backButton.position = CGPointMake(self.size.width/2, 20.0);
-  [self addChild:self.backButton];
+  self.backButton = [SKSpriteNode spriteNodeWithImageNamed:@"undo-button"];
+  self.backButton.position = CGPointMake(self.size.width/2, self.backButton.size.height/2 + 10);
   
+  
+  [self addChild:self.backButton];
+}
+
+-(void)setBackground {
+  SKSpriteNode *bg;
+  if (self.level < 3) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty"];
+  } else if (self.level < 5) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
+  } else if (self.level < 7) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-grey"];
+  } else if (self.level < 9) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-red"];
+  }
+  
+  bg.position = CGPointMake(self.size.width/2, self.size.height/2);
+  bg.zPosition = -1.0;
+  [self addChild:bg];
   
 }
 
