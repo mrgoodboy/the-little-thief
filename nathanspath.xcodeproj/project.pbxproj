@@ -16,6 +16,7 @@
 		ABEC7A751A49BF770065E993 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABEC7A741A49BF770065E993 /* Images.xcassets */; };
 		ABEC7A781A49BF770065E993 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABEC7A761A49BF770065E993 /* LaunchScreen.xib */; };
 		ABEC7A841A49BF770065E993 /* nathanspathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A831A49BF770065E993 /* nathanspathTests.m */; };
+		ABF6077B1A49E49B00EE9EA8 /* NathanSpriteNode.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,8 @@
 		ABEC7A7D1A49BF770065E993 /* nathanspathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nathanspathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABEC7A821A49BF770065E993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABEC7A831A49BF770065E993 /* nathanspathTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = nathanspathTests.m; sourceTree = "<group>"; };
+		ABF607791A49E49B00EE9EA8 /* NathanSpriteNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NathanSpriteNode.h; sourceTree = "<group>"; };
+		ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NathanSpriteNode.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +93,8 @@
 				ABEC7A671A49BF770065E993 /* AppDelegate.m */,
 				ABEC7A691A49BF770065E993 /* GameScene.h */,
 				ABEC7A6A1A49BF770065E993 /* GameScene.m */,
+				ABF607791A49E49B00EE9EA8 /* NathanSpriteNode.h */,
+				ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */,
 				ABEC7A6C1A49BF770065E993 /* GameScene.sks */,
 				ABEC7A6E1A49BF770065E993 /* GameViewController.h */,
 				ABEC7A6F1A49BF770065E993 /* GameViewController.m */,
@@ -228,6 +233,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABF6077B1A49E49B00EE9EA8 /* NathanSpriteNode.m in Sources */,
 				ABEC7A701A49BF770065E993 /* GameViewController.m in Sources */,
 				ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */,
 				ABEC7A6B1A49BF770065E993 /* GameScene.m in Sources */,
@@ -422,6 +428,7 @@
 				ABEC7A891A49BF770065E993 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		ABEC7A8A1A49BF770065E993 /* Build configuration list for PBXNativeTarget "nathanspathTests" */ = {
 			isa = XCConfigurationList;
@@ -430,6 +437,7 @@
 				ABEC7A8C1A49BF770065E993 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
