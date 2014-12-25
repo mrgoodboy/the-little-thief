@@ -104,7 +104,7 @@
 
 #define SPREAD_FACTOR 50
 #define HOUSE_SIZE 50
-#define MARGIN_SIZE 20
+#define MARGIN_SIZE 30
 
 -(CGPoint)positionForSquare:(NSInteger)square forRows:(NSInteger)rows forCols:(NSInteger)cols {
   NSInteger row = (square + cols - 1) / cols;
@@ -141,7 +141,10 @@
       }
     }
     CGPoint position = [self positionForSquare:square forRows:rows forCols:cols];
-    
+    CGPoint noise = CGPointMake([self randomFloatBetween:-MARGIN_SIZE/2 and:MARGIN_SIZE/2],
+                                [self randomFloatBetween:-MARGIN_SIZE/2 and:MARGIN_SIZE/2]);
+    position.x += noise.x;
+    position.y += noise.y;
     vertex.position = position;
     [self.playground addChild:vertex];
     [self.vertices addObject:vertex];
@@ -264,6 +267,13 @@
 
 -(void)update:(CFTimeInterval)currentTime {
   /* Called before each frame is rendered */
+}
+
+#pragma mark Helpers
+
+- (float)randomFloatBetween:(float)smallNumber and:(float)bigNumber {
+  float diff = bigNumber - smallNumber;
+  return (((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * diff) + smallNumber;
 }
 
 @end
