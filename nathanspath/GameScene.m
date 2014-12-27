@@ -71,6 +71,7 @@
   self.nathan = [[NathanSpriteNode alloc] init];
   SKSpriteNode *home = self.vertices[0];
   self.nathan.position = home.position;
+  self.nathan.alpha = 0.0;
   [self.playground addChild:self.nathan];
 }
 
@@ -115,6 +116,12 @@
   return CGPointMake(xPos, yPos);
 }
 
+-(void)drawGraph {
+  
+  
+  
+}
+
 -(void)generateGraph:(NSInteger)numOfVertices {
   
   //grid generation
@@ -127,9 +134,15 @@
   }
   
   
-  //cycle creation
   for (int i = 0; i < numOfVertices; i++) {
-    SKSpriteNode *vertex = [SKSpriteNode spriteNodeWithImageNamed:@"home-icon"];
+    SKSpriteNode *vertex;
+    if (i == 0) {
+      SKTexture *houseTexture = [SKTexture textureWithImageNamed:@"house-h"];
+      vertex = [SKSpriteNode spriteNodeWithTexture:houseTexture];
+    } else {
+      SKTexture *houseTexture = [SKTexture textureWithImageNamed:@"house-u"];
+      vertex = [SKSpriteNode spriteNodeWithTexture:houseTexture];
+    }
     
     //positioning
     NSInteger square;
@@ -149,6 +162,7 @@
     [self.playground addChild:vertex];
     [self.vertices addObject:vertex];
     
+    //cycle creation
     if (i > 0) {
       SKSpriteNode *previousVertex = self.vertices[i - 1];
       [self.edges setObject:[NSMutableArray arrayWithArray:@[previousVertex]] forKey:vertex];
@@ -206,7 +220,20 @@
 #pragma mark Interaction
 
 #define POINTS_PER_SEC 150.0
+#define FADE_OUT_DURATION 0.5
+#define FADE_IN_DURATION 0.3
 
+
+- (void)changeTextureOfVertex:(SKSpriteNode *)vertex toTexture:(SKTexture *)texture {
+  if (vertex != [self.visitedVertices firstObject]) {
+    NSDictionary *edges = [self.edges objectForKey:vertex];
+    [vertex setTexture:texture];
+    if (edges != [self.edges objectForKey:vertex]) {
+      NSLog(@"Edges tempfix");
+      [self.edges setObject:edges forKey:vertex];
+    }
+  }
+}
 
 - (void)visitVertex:(SKSpriteNode *)vertex {
   SKSpriteNode *currentVertex = [self.visitedVertices lastObject];
@@ -215,13 +242,42 @@
   CGPoint offset = CGPointMake(targetPoint.x - currentPosition.x, targetPoint.y - currentPosition.y);
   CGFloat length = sqrtf(offset.x * offset.x + offset.y * offset.y);
   CGFloat duration = length / POINTS_PER_SEC;
+  
+  //texture change 1
+  SKSpriteNode *lastVertex = [self.visitedVertices lastObject];
+  SKTexture *visitedHouse = [SKTexture textureWithImageNamed:@"house-v"];
+  [self changeTextureOfVertex:lastVertex toTexture:visitedHouse];
+  
   [self.visitedVertices addObject:vertex];
-  
-  
+  SKAction *fadeIn = [SKAction fadeAlphaTo:1.0 duration:FADE_IN_DURATION];
   SKAction *moveAction = [SKAction moveTo:targetPoint duration:duration];
-  [self.nathan runAction:moveAction completion:^{
+  SKAction *leaveGroup = [SKAction group:@[fadeIn, moveAction]];
+  SKAction *fadeOut = [SKAction fadeAlphaTo:0.0 duration:FADE_OUT_DURATION];
+  SKAction *sequence = [SKAction sequence :@[leaveGroup, fadeOut]];
+  [self.nathan runAction:sequence completion:^{
     [self checkWin];
+    SKTexture *currentHouse = [SKTexture textureWithImageNamed:@"house-c"];
+    [self changeTextureOfVertex:vertex toTexture:currentHouse];
+
   }];
+}
+
+- (void)undoMove {
+  SKSpriteNode *lastVertex = [self.visitedVertices lastObject];
+  if (lastVertex == [self.visitedVertices firstObject]) {
+    NSLog(@"No moves to undo");
+    return;
+  }
+  
+  SKSpriteNode *newVertex = [self.visitedVertices objectAtIndex:[self.visitedVertices count] - 2];
+  
+  self.nathan.position = newVertex.position;
+  [self.visitedVertices removeLastObject];
+  
+  SKTexture *unvisitedHouse = [SKTexture textureWithImageNamed:@"house-u"];
+  SKTexture *currentHouse = [SKTexture textureWithImageNamed:@"house-c"];
+  [self changeTextureOfVertex:lastVertex toTexture:unvisitedHouse];
+  [self changeTextureOfVertex:newVertex toTexture:currentHouse];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -229,26 +285,29 @@
     CGPoint touchPoint = [touch locationInNode:self];
     
     if ([self.backButton containsPoint:touchPoint]) {
-      if ([self.visitedVertices count] > 1) {
-        SKSpriteNode *lastVertex = [self.visitedVertices objectAtIndex:[self.visitedVertices count] - 2];
-        self.nathan.position = lastVertex.position;
-        [self.visitedVertices removeLastObject];
-        return;
-      }
+      [self undoMove];
+      return;
     }
     SKSpriteNode *currentVertex = [self.visitedVertices lastObject];
     for (SKSpriteNode *vertex in self.vertices) {
       touchPoint = [touch locationInNode:self.playground];
-      if ([vertex containsPoint:touchPoint] && [currentVertex containsPoint:self.nathan.position]) {
+      
+      if ([vertex containsPoint:touchPoint] && [currentVertex containsPoint:self.nathan.position] && self.nathan.alpha == 0) {
         if ([[self.edges objectForKey:currentVertex] containsObject:vertex]) {
           if (![self.visitedVertices containsObject:vertex] ||
               ([self.visitedVertices count] == [self.vertices count] && vertex == self.visitedVertices[0])) {
-            
             [self visitVertex:vertex];
             break;
             
+          } else {
+            NSLog(@"already visited");
           }
+        } else {
+          NSLog(@"no edge");
+          
         }
+      } else {
+        
       }
     }
   }
