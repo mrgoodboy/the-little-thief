@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
 		ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
+		ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */ = {isa = PBXBuildFile; fileRef = ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */; };
+		ABB169E31A4F6FAF004A90D6 /* runningNathan.atlas in Resources */ = {isa = PBXBuildFile; fileRef = ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */; };
 		ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */; };
 		ABEC7A651A49BF770065E993 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A641A49BF770065E993 /* main.m */; };
 		ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A671A49BF770065E993 /* AppDelegate.m */; };
@@ -35,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SueEllenFrancisco.ttf; sourceTree = "<group>"; };
+		ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = runningNathan.atlas; sourceTree = "<group>"; };
 		ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroScene.h; sourceTree = "<group>"; };
 		ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroScene.m; sourceTree = "<group>"; };
 		ABEC7A5F1A49BF770065E993 /* nathanspath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nathanspath.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +88,14 @@
 			name = Fonts;
 			sourceTree = "<group>";
 		};
+		ABB169E01A4F6A32004A90D6 /* atlases */ = {
+			isa = PBXGroup;
+			children = (
+				ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */,
+			);
+			name = atlases;
+			sourceTree = "<group>";
+		};
 		ABEC7A561A49BF770065E993 = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				ABB169D01A4F42BE004A90D6 /* Fonts */,
+				ABB169E01A4F6A32004A90D6 /* atlases */,
 				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
 				ABEC7A671A49BF770065E993 /* AppDelegate.m */,
 				ABEC7A6C1A49BF770065E993 /* GameScene.sks */,
@@ -239,6 +251,7 @@
 				ABEC7A751A49BF770065E993 /* Images.xcassets in Resources */,
 				ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */,
 				ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */,
+				ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */,
+				ABB169E31A4F6FAF004A90D6 /* runningNathan.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

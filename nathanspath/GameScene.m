@@ -20,8 +20,12 @@
 @property (nonatomic, strong) SKSpriteNode *repositionButton;
 @property (nonatomic, strong) SKLabelNode *timerLabel;
 @property (nonatomic, strong) NathanSpriteNode *nathan;
+@property NSInteger direction; //0 up 1 down 2 right 3 left
 @property NSTimeInterval startTime;
 @property BOOL inGame;
+
+@property (nonatomic, strong) SKTextureAtlas *runningNathanAtlas;
+
 
 @end
 @implementation GameScene
@@ -49,6 +53,14 @@
   }
   return _edges;
 }
+
+-(SKTextureAtlas *)runningNathanAtlas {
+  if (!_runningNathanAtlas) {
+    _runningNathanAtlas = [SKTextureAtlas atlasNamed:@"runningNathan.atlas"];
+  }
+  return _runningNathanAtlas;
+}
+
 
 #pragma mark Setup
 
@@ -131,7 +143,7 @@
   }
   
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
-  bg.zPosition = -1.0;
+  bg.zPosition = -10.0;
   [self addChild:bg];
   
 }
@@ -258,6 +270,7 @@
       CGPathMoveToPoint(pathToDraw, NULL, originPoint.x, originPoint.y);
       CGPathAddLineToPoint(pathToDraw, NULL, destinationPoint.x, destinationPoint.y);
       edge.path = pathToDraw;
+      edge.zPosition = -9;
       [edge setStrokeColor:[SKColor blackColor]];
       [self.playground addChild:edge];
       
@@ -274,8 +287,7 @@
 
 #pragma mark Interaction
 
-//#define POINTS_PER_SEC 150.0
-#define POINTS_PER_SEC 400
+#define POINTS_PER_SEC 250.0
 #define FADE_OUT_DURATION 0.5
 #define FADE_IN_DURATION 0.3
 
@@ -295,6 +307,17 @@
   [self changeTextureOfVertex:lastVertexName toTexture:visitedHouse];
   
   [self.visitedVertices addObject:vertexName];
+  
+  NSArray *textures = [self getTexturesFromDirection:offset];
+  SKAction *runAction = [SKAction repeatActionForever:
+                         [SKAction animateWithTextures:textures
+                                          timePerFrame:0.1f resize:NO restore:YES]];
+  if (self.direction == 1) {
+    self.nathan.zPosition = -1;
+  }
+  
+  
+  [self.nathan runAction:runAction withKey:@"runAction"];
   SKAction *fadeIn = [SKAction fadeAlphaTo:1.0 duration:FADE_IN_DURATION];
   SKAction *moveAction = [SKAction moveTo:targetPoint duration:duration];
   SKAction *leaveGroup = [SKAction group:@[fadeIn, moveAction]];
@@ -304,7 +327,9 @@
     [self checkWin];
     SKTexture *currentHouse = [SKTexture textureWithImageNamed:@"house-c"];
     [self changeTextureOfVertex:vertexName toTexture:currentHouse];
-    
+    [self.nathan removeActionForKey:@"runAction"];
+    self.nathan.zPosition = 0;
+    vertex.zPosition = 0;
   }];
 }
 
@@ -403,6 +428,7 @@
     self.startTime = currentTime;
     self.inGame = YES;
   }
+
   
   if (self.inGame) {
     int countDownInt = (int)(currentTime - self.startTime);
@@ -435,5 +461,46 @@
 - (bool)nathanIsMoving {
   return self.nathan.alpha > 0;
 }
+
+
+-(NSArray *)getTexturesFromDirection:(CGPoint)offset {
+  if (offset.x >= 0 && offset.y >= 0) {
+    if (offset.x > offset.y) {
+      self.direction = 2;
+      return @[[self.runningNathanAtlas textureNamed:@"right1"], [self.runningNathanAtlas textureNamed:@"right2"]];
+    } else {
+      self.direction = 0;
+      return @[[self.runningNathanAtlas textureNamed:@"up1"], [self.runningNathanAtlas textureNamed:@"up2"]];
+    }
+  } else if (offset.x >=0 && offset.y < 0) {
+    if (offset.x > -offset.y) {
+      self.direction = 2;
+      return @[[self.runningNathanAtlas textureNamed:@"right1"], [self.runningNathanAtlas textureNamed:@"right2"]];
+      
+    } else {
+      self.direction = 1;
+      return @[[self.runningNathanAtlas textureNamed:@"down1"], [self.runningNathanAtlas textureNamed:@"down2"]];
+    }
+  } else if (offset.x < 0 && offset.y >= 0) {
+    if (-offset.x > offset.y) {
+      self.direction = 3;
+      return @[[self.runningNathanAtlas textureNamed:@"left1"], [self.runningNathanAtlas textureNamed:@"left2"]];
+    } else {
+      self.direction = 0;
+      return @[[self.runningNathanAtlas textureNamed:@"up1"], [self.runningNathanAtlas textureNamed:@"up2"]];
+    }
+  } else {
+    if (-offset.x > -offset.y) {
+      self.direction = 3;
+      return @[[self.runningNathanAtlas textureNamed:@"left1"], [self.runningNathanAtlas textureNamed:@"left2"]];
+    } else {
+      self.direction = 1;
+      return @[[self.runningNathanAtlas textureNamed:@"down1"], [self.runningNathanAtlas textureNamed:@"down2"]];
+    }
+  }
+  
+  
+}
+
 
 @end
