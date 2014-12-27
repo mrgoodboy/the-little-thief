@@ -18,17 +18,40 @@
 
 
 -(void)didMoveToView:(SKView *)view {
-  self.playAgainButton = [[SKSpriteNode alloc] initWithColor:[SKColor redColor]
-                                                        size:CGSizeMake((self.size.width/3), 50)];
   
-  self.playAgainButton.position = CGPointMake(self.size.width/2, self.size.height/2);
+  SKSpriteNode *bg = [SKSpriteNode spriteNodeWithImageNamed:@"transition-screen"];
+  bg.anchorPoint = CGPointZero;
+  bg.zPosition = -1;
+  [self addChild:bg];
+  
+  self.playAgainButton = [[SKSpriteNode alloc] initWithColor:[SKColor clearColor]
+                                                        size:CGSizeMake((self.size.width), 100)];
+  
+  self.playAgainButton.position = CGPointMake(-self.size.width, self.size.height/2);
   [self addChild:self.playAgainButton];
   
-  SKLabelNode *playAgainText = [[SKLabelNode alloc] initWithFontNamed:@"Helvetica"];
-  playAgainText.text = @"Next Level";
+  SKLabelNode *playAgainText = [[SKLabelNode alloc] initWithFontNamed:@"SueEllenFrancisco"];
+  playAgainText.fontSize = 40.0;
+  playAgainText.text = [NSString stringWithFormat:@"Good job!"];
   playAgainText.color = [SKColor whiteColor];
-//  playAgainText.position = CGPointMake(self.playAgainButton.size.width/2, self.playAgainButton.size.height/2);
   [self.playAgainButton addChild:playAgainText];
+  
+  SKAction *wait1 = [SKAction waitForDuration:0.1];
+  SKAction *moveIn1 = [SKAction moveTo:CGPointMake(self.size.width/2, self.size.height/2) duration:0.3];
+  SKAction *wait2 = [SKAction waitForDuration:1.7];
+  SKAction *moveOut = [SKAction moveTo:CGPointMake(self.size.width * 2, self.size.height/2) duration:0.3];
+  SKAction *seq1 = [SKAction sequence:@[wait1, moveIn1, wait2, moveOut]];
+  [self.playAgainButton runAction:seq1 completion:^{
+    self.playAgainButton.position = CGPointMake(-self.size.width, self.size.height/2);
+    playAgainText.text = [NSString stringWithFormat:@"Tap to play level %ld", self.nextLevel];
+    SKAction *wait3 = [SKAction waitForDuration:0.1];
+    SKAction *moveIn2 = [SKAction moveTo:CGPointMake(self.size.width/2, self.size.height/2) duration:0.2];
+    SKAction *seq2 = [SKAction sequence:@[wait3, moveIn2]];
+    [self.playAgainButton runAction:seq2];
+  }];
+  
+  
+  
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -37,7 +60,7 @@
     if ([self.playAgainButton containsPoint:location]) {
       GameScene *newGame = [[GameScene alloc] initWithSize:self.size];
       newGame.level = self.nextLevel;
-      [self.view presentScene:newGame transition:[SKTransition doorsOpenHorizontalWithDuration:1.0]];
+      [self.view presentScene:newGame transition:[SKTransition fadeWithDuration:1.0]];
     }
   }
 }

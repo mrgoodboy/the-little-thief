@@ -17,7 +17,11 @@
 @property (nonatomic, strong) NSMutableDictionary *edges; //names of edges
 @property (nonatomic, strong) NSMutableArray *visitedVertices; //names of vertices
 @property (nonatomic, strong) SKSpriteNode *backButton;
+@property (nonatomic, strong) SKSpriteNode *repositionButton;
+@property (nonatomic, strong) SKLabelNode *timerLabel;
 @property (nonatomic, strong) NathanSpriteNode *nathan;
+@property NSTimeInterval startTime;
+@property BOOL inGame;
 
 @end
 @implementation GameScene
@@ -25,6 +29,7 @@
 #pragma mark Lazy Instantiation
 
 -(NSMutableArray *)vertices {
+  
   if (!_vertices) {
     _vertices = [[NSMutableArray alloc] init];
   }
@@ -47,31 +52,50 @@
 
 #pragma mark Setup
 
+#define MARGIN 25.0
+
 -(void)didMoveToView:(SKView *)view {
   /* Setup your scene here */
   
   [self setBackground];
-  
   [self addBackButton];
+  [self addRepositionButton];
+  [self addLevelLabel];
+  [self addTimerLabel];
   
-  self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(self.size.width - 50, self.size.height - 50 - self.backButton.size.height)];
-  self.playground.position = CGPointMake(self.size.width/2, self.size.height/2 + self.backButton.size.height/2);
+  self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(self.size.width - MARGIN*2, self.size.height - MARGIN*2 - self.backButton.size.height)];
+  self.playground.position = CGPointMake(self.size.width/2, self.size.height/2 + self.backButton.size.height/2 + MARGIN);
   [self addChild:self.playground];
-  
-  
-  [self generateGraph:self.level + 3];
-//  [self positionVertices];
-  [self drawEdges];
-  
   [self addNathan];
   
+  [self generateGraph:self.level + 3];
+  [self positionVertices];
+  [self drawEdges];
   
+}
+-(void)addLevelLabel {
+  SKLabelNode *levelLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  levelLabel.fontSize = 32.0;
+  levelLabel.text = [NSString stringWithFormat:@"level %ld", self.level];
+  levelLabel.color = [SKColor whiteColor];
+  levelLabel.position = CGPointMake(MARGIN * 2, MARGIN);
+  [self addChild:levelLabel];
+  
+}
+
+-(void)addTimerLabel {
+  
+  self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  self.timerLabel.fontSize = 40.0;
+  
+  self.timerLabel.color = [SKColor whiteColor];
+  self.timerLabel.position = CGPointMake(self.size.width - MARGIN, self.size.height - MARGIN * 2);
+  
+  [self addChild:self.timerLabel];
 }
 
 -(void)addNathan {
   self.nathan = [[NathanSpriteNode alloc] init];
-  SKSpriteNode *home = [self vertexWithName:self.vertices[0]];
-  self.nathan.position = home.position;
   self.nathan.alpha = 0.0;
   [self.playground addChild:self.nathan];
 }
@@ -84,16 +108,26 @@
   [self addChild:self.backButton];
 }
 
+-(void)addRepositionButton {
+  self.repositionButton = [SKSpriteNode spriteNodeWithImageNamed:@"new-button"];
+  self.repositionButton.position = CGPointMake(self.size.width/2 + self.backButton.size.width + 5, self.repositionButton.size.height/2 + 10);
+  [self addChild:self.repositionButton];
+}
+
 -(void)setBackground {
   SKSpriteNode *bg;
   if (self.level < 3) {
-    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty"];
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-blue"];
   } else if (self.level < 5) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
   } else if (self.level < 7) {
-    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-grey"];
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-yellow"];
   } else if (self.level < 9) {
-    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-red"];
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-grey"];
+  } else if (self.level < 11) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-orange"];
+  } else {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-orange"];
   }
   
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
@@ -126,8 +160,8 @@
   for (int i = 0; i < squares; i++) {
     takenSquares[i] = [NSNumber numberWithBool:NO];
   }
-  for (int i = 0; i < [self.vertices count]; i++) {
-    SKSpriteNode *vertex = [self.vertices objectAtIndex:i];
+  for (NSString *vertexName in self.vertices) {
+    SKSpriteNode *vertex = [self vertexWithName:vertexName];
     
     //positioning
     NSInteger square;
@@ -143,27 +177,17 @@
                                 [self randomFloatBetween:-MARGIN_SIZE/2 and:MARGIN_SIZE/2]);
     position.x += noise.x;
     position.y += noise.y;
-    SKAction *moveAction = [SKAction moveTo:position duration:0.3];
-    [vertex runAction:moveAction];
+    //    SKAction *moveAction = [SKAction moveTo:position duration:0.3];
+    //    [vertex runAction:moveAction];
     
-//    NSMutableArray *previousEdges = [self.edges objectForKey:vertex];
     vertex.position = position;
-//    [self.edges setObject:previousEdges forKey:vertex];
     
-    
+    SKSpriteNode *curPos = [self vertexWithName:[self.visitedVertices lastObject]];
+    self.nathan.position = curPos.position;
   }
 }
 
 -(void)generateGraph:(NSInteger)numOfVertices {
-  
-  //grid generation
-  NSInteger cols = self.playground.size.width/(HOUSE_SIZE+MARGIN_SIZE);
-  NSInteger rows = self.playground.size.height/(HOUSE_SIZE+MARGIN_SIZE);
-  NSInteger squares = cols * rows;
-  NSMutableArray *takenSquares= [[NSMutableArray alloc] initWithCapacity:squares];
-  for (int i = 0; i < squares; i++) {
-    takenSquares[i] = [NSNumber numberWithBool:NO];
-  }
   
   for (int i = 0; i < numOfVertices; i++) {
     SKSpriteNode *vertex;
@@ -177,21 +201,6 @@
     }
     vertex.name = [NSString stringWithFormat:@"%d", i];
     
-    //positioning
-    NSInteger square;
-    while (1) {
-      square = (arc4random() % squares) + 1;
-      if (takenSquares[square - 1] == [NSNumber numberWithBool:NO]) {
-        takenSquares[square - 1] = [NSNumber numberWithBool:YES];
-        break;
-      }
-    }
-    CGPoint position = [self positionForSquare:square forRows:rows forCols:cols];
-    CGPoint noise = CGPointMake([self randomFloatBetween:-MARGIN_SIZE/2 and:MARGIN_SIZE/2],
-                                [self randomFloatBetween:-MARGIN_SIZE/2 and:MARGIN_SIZE/2]);
-    position.x += noise.x;
-    position.y += noise.y;
-    vertex.position = position;
     [self.playground addChild:vertex];
     [self.vertices addObject:vertex.name];
     
@@ -225,8 +234,9 @@
       }
     }
   }
-  
   [self.visitedVertices addObject:self.vertices[0]];
+  
+  
 }
 
 -(void)drawEdges {
@@ -243,6 +253,7 @@
       //      CGPoint destinationPoint = [self convertPoint:adjacent.position fromNode:self.playground];
       CGPoint destinationPoint = adjacent.position;
       SKShapeNode *edge = [SKShapeNode node];
+      edge.name = @"edge";
       CGMutablePathRef pathToDraw = CGPathCreateMutable();
       CGPathMoveToPoint(pathToDraw, NULL, originPoint.x, originPoint.y);
       CGPathAddLineToPoint(pathToDraw, NULL, destinationPoint.x, destinationPoint.y);
@@ -263,7 +274,8 @@
 
 #pragma mark Interaction
 
-#define POINTS_PER_SEC 150.0
+//#define POINTS_PER_SEC 150.0
+#define POINTS_PER_SEC 400
 #define FADE_OUT_DURATION 0.5
 #define FADE_IN_DURATION 0.3
 
@@ -302,9 +314,10 @@
     NSLog(@"No moves to undo");
     return;
   }
+  self.startTime -= 5;
   NSString *newVertexName = [self.visitedVertices objectAtIndex:[self.visitedVertices count] - 2];
   SKSpriteNode *newVertex = [self vertexWithName:newVertexName];
-
+  
   
   self.nathan.position = newVertex.position;
   [self.visitedVertices removeLastObject];
@@ -315,6 +328,20 @@
   [self changeTextureOfVertex:newVertexName toTexture:currentHouse];
 }
 
+- (void)repositionVertices {
+  if ([self nathanIsMoving]) {
+    NSLog(@"Nathan is moving");
+    return;
+  }
+  self.startTime -= 3;
+  
+  SKNode *edge;
+  while ((edge = [self.playground childNodeWithName:@"edge"]))
+    [edge removeFromParent];
+  [self positionVertices];
+  [self drawEdges];
+}
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   for (UITouch *touch in touches) {
     CGPoint touchPoint = [touch locationInNode:self];
@@ -322,14 +349,18 @@
     if ([self.backButton containsPoint:touchPoint]) {
       [self undoMove];
       return;
+    } if ([self.repositionButton containsPoint:touchPoint]) {
+      [self repositionVertices];
+      return;
     }
+    
     NSString *currentVertexName = [self.visitedVertices lastObject];
     SKSpriteNode *currentVertex = [self vertexWithName:currentVertexName];
     for (NSString *vertexName in self.vertices) {
       SKSpriteNode *vertex = [self vertexWithName:vertexName];
       touchPoint = [touch locationInNode:self.playground];
       
-      if ([vertex containsPoint:touchPoint] && [currentVertex containsPoint:self.nathan.position] && self.nathan.alpha == 0) {
+      if ([vertex containsPoint:touchPoint] && [currentVertex containsPoint:self.nathan.position] && ![self nathanIsMoving]) {
         if ([[self.edges objectForKey:currentVertexName] containsObject:vertexName]) {
           if (![self.visitedVertices containsObject:vertexName] ||
               ([self.visitedVertices count] == [self.vertices count] && vertexName == self.visitedVertices[0])) {
@@ -353,16 +384,34 @@
 -(void)checkWin {
   if ([self.visitedVertices count] == [self.vertices count] + 1) {
     NSLog(@"won");
-    
+    self.inGame = NO;
     WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
     wonScene.nextLevel = self.level + 1;
-    [self.view presentScene:wonScene transition:[SKTransition doorsCloseHorizontalWithDuration:1.0]];
+    [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:1.0]];
   }
   
 }
+-(void)lostGame {
+  self.inGame = NO;
+  WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
+  wonScene.nextLevel = self.level + 1;
+  [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:1.0]];
+}
 
 -(void)update:(CFTimeInterval)currentTime {
-  /* Called before each frame is rendered */
+  if (!self.startTime) {
+    self.startTime = currentTime;
+    self.inGame = YES;
+  }
+  
+  if (self.inGame) {
+    int countDownInt = (int)(currentTime - self.startTime);
+    if (countDownInt < 41) {
+      self.timerLabel.text = [NSString stringWithFormat:@"%d", 41 - countDownInt];
+    } else {
+      [self lostGame];
+    }
+  }
 }
 
 #pragma mark Helpers
@@ -381,6 +430,10 @@
     SKSpriteNode *vertex = [self vertexWithName:vertexName];
     [vertex setTexture:texture];
   }
+}
+
+- (bool)nathanIsMoving {
+  return self.nathan.alpha > 0;
 }
 
 @end

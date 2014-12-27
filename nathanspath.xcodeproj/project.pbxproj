@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
+		ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
+		ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */; };
 		ABEC7A651A49BF770065E993 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A641A49BF770065E993 /* main.m */; };
 		ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A671A49BF770065E993 /* AppDelegate.m */; };
 		ABEC7A6B1A49BF770065E993 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A6A1A49BF770065E993 /* GameScene.m */; };
@@ -31,6 +34,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SueEllenFrancisco.ttf; sourceTree = "<group>"; };
+		ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroScene.h; sourceTree = "<group>"; };
+		ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroScene.m; sourceTree = "<group>"; };
 		ABEC7A5F1A49BF770065E993 /* nathanspath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nathanspath.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABEC7A631A49BF770065E993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABEC7A641A49BF770065E993 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -71,6 +77,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		ABB169D01A4F42BE004A90D6 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		ABEC7A561A49BF770065E993 = {
 			isa = PBXGroup;
 			children = (
@@ -92,15 +106,18 @@
 		ABEC7A611A49BF770065E993 /* nathanspath */ = {
 			isa = PBXGroup;
 			children = (
+				ABB169D01A4F42BE004A90D6 /* Fonts */,
 				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
 				ABEC7A671A49BF770065E993 /* AppDelegate.m */,
+				ABEC7A6C1A49BF770065E993 /* GameScene.sks */,
 				ABEC7A691A49BF770065E993 /* GameScene.h */,
 				ABEC7A6A1A49BF770065E993 /* GameScene.m */,
+				ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */,
+				ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */,
 				ABF61CDA1A4C2658002CBFEE /* WonScene.h */,
 				ABF61CDB1A4C2658002CBFEE /* WonScene.m */,
 				ABF607791A49E49B00EE9EA8 /* NathanSpriteNode.h */,
 				ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */,
-				ABEC7A6C1A49BF770065E993 /* GameScene.sks */,
 				ABEC7A6E1A49BF770065E993 /* GameViewController.h */,
 				ABEC7A6F1A49BF770065E993 /* GameViewController.m */,
 				ABEC7A711A49BF770065E993 /* Main.storyboard */,
@@ -218,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABEC7A781A49BF770065E993 /* LaunchScreen.xib in Resources */,
+				ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */,
 				ABEC7A751A49BF770065E993 /* Images.xcassets in Resources */,
 				ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */,
 				ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */,
@@ -228,6 +246,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABF6077B1A49E49B00EE9EA8 /* NathanSpriteNode.m in Sources */,
+				ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */,
 				ABF61CDC1A4C2658002CBFEE /* WonScene.m in Sources */,
 				ABEC7A701A49BF770065E993 /* GameViewController.m in Sources */,
 				ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */,

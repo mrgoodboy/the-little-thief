@@ -7,8 +7,7 @@
 //
 
 #import "GameViewController.h"
-#import "GameScene.h"
-
+#import "IntroScene.h"
 @implementation SKScene (Unarchive)
 
 + (instancetype)unarchiveFromFile:(NSString *)file {
@@ -42,10 +41,9 @@
   skView.ignoresSiblingOrder = YES;
   
   // Create and configure the scene.
-  GameScene *scene = [GameScene unarchiveFromFile:@"GameScene"];
+  IntroScene *scene = [[IntroScene alloc] init];
   scene.scaleMode = SKSceneScaleModeAspectFill;
   scene.size = skView.bounds.size;
-  scene.level = 1;
   
   // Present the scene.
   [skView presentScene:scene];
@@ -53,7 +51,7 @@
 
 - (BOOL)shouldAutorotate
 {
-  return YES;
+  return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations
