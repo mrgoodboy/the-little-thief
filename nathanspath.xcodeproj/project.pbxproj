@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */; };
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
 		ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
 		ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */ = {isa = PBXBuildFile; fileRef = ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LostScene.h; sourceTree = "<group>"; };
+		AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LostScene.m; sourceTree = "<group>"; };
 		ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SueEllenFrancisco.ttf; sourceTree = "<group>"; };
 		ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = runningNathan.atlas; sourceTree = "<group>"; };
 		ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroScene.h; sourceTree = "<group>"; };
@@ -128,6 +131,8 @@
 				ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */,
 				ABF61CDA1A4C2658002CBFEE /* WonScene.h */,
 				ABF61CDB1A4C2658002CBFEE /* WonScene.m */,
+				AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */,
+				AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */,
 				ABF607791A49E49B00EE9EA8 /* NathanSpriteNode.h */,
 				ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */,
 				ABEC7A6E1A49BF770065E993 /* GameViewController.h */,
@@ -277,6 +282,7 @@
 				ABEC7A701A49BF770065E993 /* GameViewController.m in Sources */,
 				ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */,
 				ABEC7A6B1A49BF770065E993 /* GameScene.m in Sources */,
+				AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */,
 				ABEC7A651A49BF770065E993 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
