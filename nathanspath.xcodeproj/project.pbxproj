@@ -83,12 +83,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		ABB169D01A4F42BE004A90D6 /* Fonts */ = {
+		ABB169D01A4F42BE004A90D6 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
 				ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */,
 			);
-			name = Fonts;
+			name = fonts;
 			sourceTree = "<group>";
 		};
 		ABB169E01A4F6A32004A90D6 /* atlases */ = {
@@ -120,7 +120,7 @@
 		ABEC7A611A49BF770065E993 /* nathanspath */ = {
 			isa = PBXGroup;
 			children = (
-				ABB169D01A4F42BE004A90D6 /* Fonts */,
+				ABB169D01A4F42BE004A90D6 /* fonts */,
 				ABB169E01A4F6A32004A90D6 /* atlases */,
 				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
 				ABEC7A671A49BF770065E993 /* AppDelegate.m */,

@@ -43,7 +43,7 @@
   SKAction *seq1 = [SKAction sequence:@[wait1, moveIn1, wait2, moveOut]];
   [self.playAgainButton runAction:seq1 completion:^{
     self.playAgainButton.position = CGPointMake(-self.size.width, self.size.height*2/3);
-    playAgainText.text = [NSString stringWithFormat:@"Tap to play level %ld", self.nextLevel];
+    playAgainText.text = [NSString stringWithFormat:@"Tap to play level %ld", (long)self.nextLevel];
     SKAction *wait3 = [SKAction waitForDuration:0.1];
     SKAction *moveIn2 = [SKAction moveTo:CGPointMake(self.size.width/2, self.size.height*2/3) duration:0.2];
     SKAction *seq2 = [SKAction sequence:@[wait3, moveIn2]];

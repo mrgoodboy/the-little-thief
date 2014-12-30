@@ -28,6 +28,7 @@
 @property (nonatomic, strong) SKSpriteNode *backButton;
 @property (nonatomic, strong) SKLabelNode *settingsButton;
 @property (nonatomic, strong) SKLabelNode *instructionsButton;
+@property (nonatomic, strong) SKSpriteNode *instructionsBg;
 
 @property NSInteger direction; //0 up 1 down 2 right 3 left
 @property NSTimeInterval startTime;
@@ -86,7 +87,7 @@
   [self addLevelLabel];
   [self addTimerLabel];
   
-  self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(self.size.width - MARGIN*2, self.size.height - MARGIN*5 - self.undoButton.size.height)];
+  self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(self.size.width - MARGIN*2, self.size.height - MARGIN*5 - self.undoButton.size.height)];
   self.playground.position = CGPointMake(self.size.width/2, self.size.height/2);
   [self addChild:self.playground];
   [self addNathan];
@@ -95,11 +96,12 @@
   [self positionVertices];
   [self drawEdges];
   
+  
 }
 -(void)addLevelLabel {
   SKLabelNode *levelLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   levelLabel.fontSize = 42.0;
-  levelLabel.text = [NSString stringWithFormat:@"level %ld", self.level];
+  levelLabel.text = [NSString stringWithFormat:@"level %ld", (long)self.level];
   levelLabel.color = [SKColor whiteColor];
   levelLabel.position = CGPointMake(2.5*MARGIN, self.size.height - 2.5*MARGIN);
   [self addChild:levelLabel];
@@ -328,7 +330,7 @@
 #define FADE_OUT_DURATION 0.1
 #define FADE_IN_DURATION 0.3
 #define UNDO_PENALTY 3.0
-#define REDRAW_PENALTY 2.0
+#define REDRAW_PENALTY 3.0
 
 
 - (void)visitVertex:(NSString *)vertexName {
@@ -413,6 +415,7 @@
     else
       touchPoint = [touch locationInNode:self.pauseBg];
     
+    
     if ([self.undoButton containsPoint:touchPoint]) {
       [self undoMove];
       return;
@@ -425,6 +428,10 @@
     } else if ([self.backButton containsPoint:touchPoint]) {
       [self resumeGame];
       return;
+    } else if ([self.instructionsButton containsPoint:touchPoint]) {
+      [self viewInstructions];
+      return;
+      
     }
     
     NSString *currentVertexName = [self.visitedVertices lastObject];
@@ -482,9 +489,12 @@
   self.pauseBg.position = CGPointMake(self.size.width/2, self.size.height/2);
   [self addChild:self.pauseBg];
   
+  CGFloat deviceHeight = self.size.height;
+  CGFloat deviceWidth = self.size.width;
+  
   self.backButton = [SKSpriteNode spriteNodeWithImageNamed:@"back-button"];
   self.backButton.anchorPoint = CGPointMake(0.0, 1.0);
-  self.backButton.position = CGPointMake(-self.pauseBg.size.width/2 + MARGIN, self.pauseBg.size.height/2 - MARGIN);
+  self.backButton.position = CGPointMake(-deviceWidth/2 + MARGIN, deviceHeight/2 - MARGIN);
   [self.pauseBg addChild:self.backButton];
   
   self.instructionsButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
@@ -525,7 +535,75 @@
   [messageLabel runAction:[SKAction fadeOutWithDuration:0.5]];
 }
 
-
+-(void)viewInstructions {
+  
+  self.instructionsBg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
+  self.instructionsBg.zPosition = 11;
+  self.instructionsBg.position = CGPointMake(self.size.width/2, self.size.height/2);
+  [self addChild:self.instructionsBg];
+  
+  SKTexture *visitedTexture = [SKTexture textureWithImageNamed:@"house-v"];
+  SKTexture *homeTexture = [SKTexture textureWithImageNamed:@"house-h"];
+  SKSpriteNode *v1 = [SKSpriteNode spriteNodeWithTexture:homeTexture];
+  v1.position = CGPointMake(-39, -90);
+  
+  SKTexture *unvisitedTexture = [SKTexture textureWithImageNamed:@"house-u"];
+  SKSpriteNode *v2 = [SKSpriteNode spriteNodeWithTexture:unvisitedTexture];
+  v2.position = CGPointMake(-80, 55);
+  
+  SKTexture *currentTexture = [SKTexture textureWithImageNamed:@"house-c"];
+  SKSpriteNode *v3 = [SKSpriteNode spriteNodeWithTexture:currentTexture];
+  v3.position = CGPointMake(100, 20);
+  
+  [self.instructionsBg addChild:v1];
+  [self.instructionsBg addChild:v2];
+  [self.instructionsBg addChild:v3];
+  
+  SKSpriteNode *nathan = [[NathanSpriteNode alloc] init];
+  nathan.position = v1.position;
+  [self.instructionsBg addChild:nathan];
+  
+  SKLabelNode *instructionLabel1 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  instructionLabel1.fontColor = [SKColor yellowColor];
+  instructionLabel1.fontSize = 40.0;
+  instructionLabel1.position = CGPointMake(0, self.instructionsBg.size.height*3/4);
+  instructionLabel1.alpha = 0;
+  instructionLabel1.text = @"Help The Little Thief find";
+  
+  SKLabelNode *instructionLabel2 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  instructionLabel2.fontColor = [SKColor yellowColor];
+  instructionLabel2.fontSize = 40.0;
+  instructionLabel2.position = CGPointMake(0, self.instructionsBg.size.height*3/4 - 40);
+  instructionLabel2.alpha = 0;
+  instructionLabel2.text = @"a path to rob all houses";
+  
+  
+  SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.3];
+  SKAction *fadeInAction = [SKAction fadeInWithDuration:0.3];
+  SKAction *waitForRead = [SKAction waitForDuration:4];
+  SKAction *fadeSequence = [SKAction sequence:@[fadeInAction, waitForRead, fadeOutAction]];
+  
+  [instructionLabel1 runAction:fadeSequence];
+  [instructionLabel2 runAction:fadeSequence completion:^{
+    
+  
+  
+  }];
+  
+  
+  
+  
+  [self.instructionsBg runAction:[SKAction waitForDuration:5] completion:^{
+    [self.instructionsBg removeAllChildren];
+    [self.instructionsBg removeFromParent];
+  }];
+  
+  
+  
+  
+  
+  
+}
 
 #define GAME_DURATION 41
 
