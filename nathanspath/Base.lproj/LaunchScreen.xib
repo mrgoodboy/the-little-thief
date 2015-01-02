@@ -13,11 +13,11 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="unK-LR-mH5">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pivolabs" translatesAutoresizingMaskIntoConstraints="NO" id="btM-7W-IMd">
-                            <rect key="frame" x="140" y="190" width="200" height="100"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="zyx" translatesAutoresizingMaskIntoConstraints="NO" id="btM-7W-IMd">
+                            <rect key="frame" x="182" y="105" width="117" height="270"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="100" id="94L-ha-zya"/>
-                                <constraint firstAttribute="width" constant="200" id="R4S-Ih-WZC"/>
+                                <constraint firstAttribute="height" constant="270" id="94L-ha-zya"/>
+                                <constraint firstAttribute="width" constant="117" id="R4S-Ih-WZC"/>
                             </constraints>
                         </imageView>
                     </subviews>
@@ -41,6 +41,6 @@
         </view>
     </objects>
     <resources>
-        <image name="pivolabs" width="100" height="50"/>
+        <image name="zyx" width="100" height="184"/>
     </resources>
 </document>

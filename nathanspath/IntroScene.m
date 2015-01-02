@@ -75,7 +75,7 @@
 }
 
 - (void)viewInstructions {
-  GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
+  GameScene *gameScene = [[GameScene alloc] initWithSize:self.size];
   gameScene.onlyInstructions = YES;
   [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.0]];
 }

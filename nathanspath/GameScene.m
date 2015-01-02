@@ -44,6 +44,9 @@
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeRightGestureRecognizer;
 
+//game config
+@property NSInteger sizeChangeLevel; //level for size change
+
 @end
 @implementation GameScene
 
@@ -85,12 +88,15 @@
 #define MARGIN 20.0
 
 - (void)didMoveToView:(SKView *)view {
+  [self mySetDeviceSuffix];
+  
   if (self.onlyInstructions) {
     self.inGame = NO;
     [self viewInstructions];
     return;
   }
   
+
   [self setBackground];
   [self addUndoButton];
   [self addRepositionButton];
@@ -163,15 +169,15 @@
 
 - (void)setBackground {
   SKSpriteNode *bg;
-  if (self.level < 3) {
+  if (self.level < 7) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-blue"];
-  } else if (self.level < 5) {
+  } else if (self.level < 13) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
-  } else if (self.level < 7) {
+  } else if (self.level < 19) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-yellow"];
-  } else if (self.level < 9) {
+  } else if (self.level < 25) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-grey"];
-  } else if (self.level < 11) {
+  } else if (self.level < 31) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-orange"];
   } else {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-red"];
@@ -183,26 +189,48 @@
   
 }
 
+- (void)mySetDeviceSuffix {
+  CGFloat deviceHeight = self.size.height;
+  if (deviceHeight <= 480) {
+    self.deviceSuffix = @"-4";
+    self.sizeChangeLevel = 12;
+  } else if (deviceHeight <= 568) {
+    self.deviceSuffix = @"-5";
+    self.sizeChangeLevel = 13;
+  } else if (deviceHeight <= 667) {
+    self.deviceSuffix = @"-6";
+    self.sizeChangeLevel = 14;
+  } else {
+    self.deviceSuffix = @"";
+    self.sizeChangeLevel = 15;
+  }
+  
+}
+
 #pragma mark Graph Creation
 
-#define SPREAD_FACTOR 50
-#define HOUSE_SIZE 50
-#define MARGIN_SIZE 30
+#define HOUSE_SIZE 50.0
+#define HOUSE_MARGIN_SIZE 30.0
+
 
 - (CGPoint)positionForSquare:(NSInteger)square forRows:(NSInteger)rows forCols:(NSInteger)cols {
+  CGFloat houseSize = self.level < self.sizeChangeLevel ? HOUSE_SIZE : HOUSE_SIZE*4/5;
   NSInteger row = (square + cols - 1) / cols;
-  CGFloat yPos = (row - 1) * (HOUSE_SIZE+MARGIN_SIZE) + HOUSE_SIZE/2 - self.playground.size.height/2;
+  CGFloat yPos = (row - 1) * (houseSize+HOUSE_MARGIN_SIZE) + houseSize/2 - self.playground.size.height/2;
   NSInteger col = square - (cols * (row - 1));
   
-  CGFloat xPos = (col-1) * (HOUSE_SIZE+MARGIN_SIZE) + HOUSE_SIZE/2 - self.playground.size.width/2;
+  CGFloat xPos = (col-1) * (houseSize+HOUSE_MARGIN_SIZE) + houseSize/2 - self.playground.size.width/2;
   return CGPointMake(xPos, yPos);
 }
 
 - (void)positionVertices {
   //grid generation
-  NSInteger cols = self.playground.size.width/(HOUSE_SIZE+MARGIN_SIZE);
-  NSInteger rows = self.playground.size.height/(HOUSE_SIZE+MARGIN_SIZE);
+  CGFloat houseSize = self.level < self.sizeChangeLevel ? HOUSE_SIZE : HOUSE_SIZE*4/5;
+  
+  NSInteger cols = self.playground.size.width/(houseSize+HOUSE_MARGIN_SIZE);
+  NSInteger rows = self.playground.size.height/(houseSize+HOUSE_MARGIN_SIZE);
   NSInteger squares = cols * rows;
+  NSLog(@"%lu", (long)squares);
   NSMutableArray *takenSquares= [[NSMutableArray alloc] initWithCapacity:squares];
   for (int i = 0; i < squares; i++) {
     takenSquares[i] = [NSNumber numberWithBool:NO];
@@ -220,16 +248,16 @@
       }
     }
     CGPoint position = [self positionForSquare:square forRows:rows forCols:cols];
-    CGPoint noise = CGPointMake([self randomFloatBetween:-MARGIN_SIZE/2 and:MARGIN_SIZE/2],
-                                [self randomFloatBetween:-MARGIN_SIZE/2 and:MARGIN_SIZE/2]);
+    CGPoint noise = CGPointMake([self randomFloatBetween:-HOUSE_MARGIN_SIZE/2 and:HOUSE_MARGIN_SIZE/2],
+                                [self randomFloatBetween:-HOUSE_MARGIN_SIZE/2 and:HOUSE_MARGIN_SIZE/2]);
     position.x += noise.x;
     position.y += noise.y;
     
     //adjust to best use space
-    CGFloat leftVerticalSpace = self.playground.size.height - rows * HOUSE_SIZE - (rows-1) * MARGIN_SIZE;
+    CGFloat leftVerticalSpace = self.playground.size.height - rows * houseSize - (rows-1) * HOUSE_MARGIN_SIZE;
     position.y += leftVerticalSpace/2;
     
-    CGFloat leftHorizontalSpace = self.playground.size.width - cols * HOUSE_SIZE - (cols-1) * MARGIN_SIZE;
+    CGFloat leftHorizontalSpace = self.playground.size.width - cols * houseSize - (cols-1) * HOUSE_MARGIN_SIZE;
     position.x += leftHorizontalSpace/2;
     
     //prevent touching buttons, usually doesn't happen
@@ -257,10 +285,10 @@
     SKSpriteNode *vertex;
     
     if (i == 0) {
-      SKTexture *houseTexture = [SKTexture textureWithImageNamed:@"house-h"];
+      SKTexture *houseTexture = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-h"]];
       vertex = [SKSpriteNode spriteNodeWithTexture:houseTexture];
     } else {
-      SKTexture *houseTexture = [SKTexture textureWithImageNamed:@"house-u"];
+      SKTexture *houseTexture = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-u"]];
       vertex = [SKSpriteNode spriteNodeWithTexture:houseTexture];
     }
     vertex.name = [NSString stringWithFormat:@"%d", i];
@@ -358,7 +386,7 @@
   
   //texture change 1
   NSString *lastVertexName = [self.visitedVertices lastObject];
-  SKTexture *visitedHouse = [SKTexture textureWithImageNamed:@"house-v"];
+  SKTexture *visitedHouse = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-v"]];
   [self changeTextureOfVertex:lastVertexName toTexture:visitedHouse];
   
   [self.visitedVertices addObject:vertexName];
@@ -380,7 +408,7 @@
   SKAction *sequence = [SKAction sequence :@[leaveGroup, fadeOut]];
   [self.nathan runAction:sequence completion:^{
     [self checkWin];
-    SKTexture *currentHouse = [SKTexture textureWithImageNamed:@"house-c"];
+    SKTexture *currentHouse = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-c"]];
     [self changeTextureOfVertex:vertexName toTexture:currentHouse];
     self.nathan.zPosition = 0;
   }];
@@ -441,8 +469,8 @@
   [self.visitedVertices removeLastObject];
   [self.directionHistory removeLastObject];
   
-  SKTexture *unvisitedHouse = [SKTexture textureWithImageNamed:@"house-u"];
-  SKTexture *currentHouse = [SKTexture textureWithImageNamed:@"house-c"];
+  SKTexture *unvisitedHouse = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-u"]];
+  SKTexture *currentHouse = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-c"]];
   [self changeTextureOfVertex:lastVertexName toTexture:unvisitedHouse];
   [self changeTextureOfVertex:newVertexName toTexture:currentHouse];
 }
@@ -553,7 +581,7 @@
 
 - (void)pauseGame {
   self.inGame = NO;
-  self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:@"transition-screen"];
+  self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"transition-screen%@", self.deviceSuffix]];
   self.pauseBg.zPosition = 10;
   self.pauseBg.position = CGPointMake(self.size.width/2, self.size.height/2);
   [self addChild:self.pauseBg];
@@ -595,17 +623,6 @@
 - (void)viewInstructions {
   self.instructionNumber = 1;
 
-  CGFloat deviceHeight = self.size.height;
-  if (deviceHeight <= 480) {
-    self.deviceSuffix = @"-4";
-  } else if (deviceHeight <= 568) {
-    self.deviceSuffix = @"-5";
-  } else if (deviceHeight <= 667) {
-    self.deviceSuffix = @"-6";
-  } else {
-    self.deviceSuffix = @"";
-  }
-  
   NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
   SKTexture *texture = [SKTexture textureWithImageNamed:imgName];
   self.instructionsBg = [SKSpriteNode spriteNodeWithTexture:texture];
@@ -672,7 +689,7 @@
 }
 
 #define GAME_DURATION 41
-
+//#define GAME_DURATION 10000
 - (void)update:(CFTimeInterval)currentTime {
   if (!self.startTime) {
     self.startTime = currentTime;
@@ -801,5 +818,13 @@
   IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
   [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
 }
+
+- (NSString *)houseWithAppendix:(NSString *)house {
+  if (self.level < self.sizeChangeLevel)
+    return house;
+  else
+    return [NSString stringWithFormat:@"%@%@", house, @"-small"];
+}
+
 
 @end

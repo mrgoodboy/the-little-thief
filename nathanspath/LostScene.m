@@ -46,7 +46,7 @@
     b.fontSize = 40.0;
     b.fontColor = [SKColor yellowColor];
     NSString *st1 = [NSString stringWithFormat:@"level reached: %ld", (long)self.level];
-    NSString *st2 = [NSString stringWithFormat:@"highest reached: %lu", highScore];;
+    NSString *st2 = [NSString stringWithFormat:@"highest reached: %lu", (long)highScore];;
     b.position = CGPointMake(b.position.x, b.position.y - a.frame.size.height - 50);
     a.text = st1;
     b.text = st2;

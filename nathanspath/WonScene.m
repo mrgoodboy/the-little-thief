@@ -61,7 +61,6 @@
       GameScene *newGame = [[GameScene alloc] initWithSize:self.size];
       newGame.level = self.nextLevel;
       newGame.bonusSeconds = self.bonusSeconds;
-      NSLog(@"%ld", (long)newGame.bonusSeconds);
       [self.view presentScene:newGame transition:[SKTransition fadeWithDuration:1.0]];
     }
   }
