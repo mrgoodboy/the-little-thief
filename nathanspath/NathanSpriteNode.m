@@ -11,7 +11,7 @@
 @implementation NathanSpriteNode
 
 -(instancetype)init {
-  NathanSpriteNode *nathan = (NathanSpriteNode *)[SKSpriteNode spriteNodeWithImageNamed:@"car-icon"];
+  NathanSpriteNode *nathan = (NathanSpriteNode *)[SKSpriteNode spriteNodeWithImageNamed:@"undo-button"];
   return nathan;
 }
 

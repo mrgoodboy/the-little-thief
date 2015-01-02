@@ -11,5 +11,5 @@
 @interface WonScene : SKScene
 
 @property NSInteger nextLevel;
-
+@property NSInteger bonusSeconds;
 @end

@@ -13,7 +13,7 @@
 #define TLT_YELLOW [SKColor colorWithRed:255.0 green:241.0 blue:1.0 alpha:1.0];
 
 @property NSInteger level;
-
-
+@property NSInteger bonusSeconds;
+@property BOOL onlyInstructions;
 
 @end

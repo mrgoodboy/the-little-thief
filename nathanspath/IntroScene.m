@@ -14,18 +14,29 @@
 @property (nonatomic, strong) SKSpriteNode *nathan;
 @property (nonatomic, strong) SKSpriteNode *arrow;
 @property (nonatomic, strong) UISwipeGestureRecognizer *gestureRecognizer;
+@property (nonatomic, strong) SKLabelNode *instructions;
 @end
 @implementation IntroScene
--(void)didMoveToView:(SKView *)view {
-  [self setBackground];
+- (void)didMoveToView:(SKView *)view {
+
   
-  self.gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
-  self.gestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-  [self.view addGestureRecognizer:self.gestureRecognizer];
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
+  {
+    [self setBackground];
+    self.gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+    self.gestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:self.gestureRecognizer];
+  }
+  else
+  {
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self viewInstructions];
+  }
   
 }
 
--(void)setBackground {
+- (void)setBackground {
   CGFloat deviceHeight = self.size.height;
   if (deviceHeight <= 480) {
     self.nathan = [SKSpriteNode spriteNodeWithImageNamed:@"intro-nathan5"];
@@ -54,6 +65,28 @@
   self.arrow.position = CGPointMake(self.size.width - 20, self.size.height*7/24);
   [self addChild:self.arrow];
   
+  self.instructions = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Light"];
+  self.instructions.text = @"?";
+  self.instructions.fontColor = [UIColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+  self.instructions.position = CGPointMake(self.size.width-30, 20);
+  self.instructions.fontSize = 50.0;
+  [self addChild:self.instructions];
+  
+}
+
+- (void)viewInstructions {
+  GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
+  gameScene.onlyInstructions = YES;
+  [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.0]];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+  for (UITouch *touch in touches) {
+    CGPoint position = [touch locationInNode:self];
+    if ([self.instructions containsPoint:position]) {
+      [self viewInstructions];
+    }
+  }
 }
 
 - (void)handleSwipe:(UISwipeGestureRecognizer *)sender
@@ -70,12 +103,11 @@
         [self.view removeGestureRecognizer:self.gestureRecognizer];
         GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
         gameScene.level = 1;
+        gameScene.onlyInstructions = NO;
         [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.5]];
       }];
 
     }
-    
-
 }
 
 @end

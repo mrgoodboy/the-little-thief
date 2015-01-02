@@ -32,13 +32,13 @@
   
   SKLabelNode *playAgainText = [[SKLabelNode alloc] initWithFontNamed:@"SueEllenFrancisco"];
   playAgainText.fontSize = 40.0;
-  playAgainText.text = [NSString stringWithFormat:@"Good job!"];
+  playAgainText.text = [NSString stringWithFormat:@"Nice! +%ld seconds", (long)self.bonusSeconds];
   playAgainText.fontColor = [SKColor yellowColor];
   [self.playAgainButton addChild:playAgainText];
   
   SKAction *wait1 = [SKAction waitForDuration:0.1];
   SKAction *moveIn1 = [SKAction moveTo:CGPointMake(self.size.width/2, self.size.height*2/3) duration:0.3];
-  SKAction *wait2 = [SKAction waitForDuration:1.2];
+  SKAction *wait2 = [SKAction waitForDuration:1.5];
   SKAction *moveOut = [SKAction moveTo:CGPointMake(self.size.width * 2, self.size.height*2/3) duration:0.3];
   SKAction *seq1 = [SKAction sequence:@[wait1, moveIn1, wait2, moveOut]];
   [self.playAgainButton runAction:seq1 completion:^{
@@ -60,6 +60,8 @@
     if (location.y < self.size.height - 70) {
       GameScene *newGame = [[GameScene alloc] initWithSize:self.size];
       newGame.level = self.nextLevel;
+      newGame.bonusSeconds = self.bonusSeconds;
+      NSLog(@"%ld", (long)newGame.bonusSeconds);
       [self.view presentScene:newGame transition:[SKTransition fadeWithDuration:1.0]];
     }
   }

@@ -11,12 +11,22 @@
 
 @implementation LostScene
 
--(void)didMoveToView:(SKView *)view {
+- (void)didMoveToView:(SKView *)view {
   
   SKSpriteNode *bg = [SKSpriteNode spriteNodeWithImageNamed:@"nathan-caught"];
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
   bg.zPosition = -1;
   [self addChild:bg];
+  
+  
+  //high score stuff
+  NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
+  if (!highScore || self.level > highScore) {
+    [[NSUserDefaults standardUserDefaults] setInteger:self.level forKey:@"HighScore"];
+    highScore = self.level;
+  }
+    
+  
   
   SKLabelNode *playAgainText = [[SKLabelNode alloc] initWithFontNamed:@"SueEllenFrancisco"];
   playAgainText.fontSize = 40.0;
@@ -36,7 +46,7 @@
     b.fontSize = 40.0;
     b.fontColor = [SKColor yellowColor];
     NSString *st1 = [NSString stringWithFormat:@"level reached: %ld", (long)self.level];
-    NSString *st2 = [NSString stringWithFormat:@"highest reached: %d", 100];;
+    NSString *st2 = [NSString stringWithFormat:@"highest reached: %lu", highScore];;
     b.position = CGPointMake(b.position.x, b.position.y - a.frame.size.height - 50);
     a.text = st1;
     b.text = st2;
@@ -53,12 +63,11 @@
   
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-  for (UITouch *touch in touches) {
-    IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
-    [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:1.0]];
-    
-  }
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+  IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
+  [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:1.0]];
+  
+  
 }
 
 

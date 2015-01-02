@@ -9,11 +9,14 @@
 #import "GameScene.h"
 #import "WonScene.h"
 #import "LostScene.h"
+#import "IntroScene.h"
 #import "NathanSpriteNode.h"
 #include "stdlib.h"
 
 @interface GameScene ()
 
+@property NSString *deviceSuffix; //for instructions
+@property (nonatomic, strong) NathanSpriteNode *nathan;
 @property (nonatomic, strong) SKSpriteNode *playground;
 @property (nonatomic, strong) NSMutableArray *vertices; //names of vertices
 @property (nonatomic, strong) NSMutableDictionary *edges; //names of edges
@@ -21,22 +24,25 @@
 @property (nonatomic, strong) SKSpriteNode *undoButton;
 @property (nonatomic, strong) SKSpriteNode *repositionButton;
 @property (nonatomic, strong) SKLabelNode *timerLabel;
-@property (nonatomic, strong) NathanSpriteNode *nathan;
-
 @property (nonatomic, strong) SKSpriteNode *pauseButton;
+
 @property (nonatomic, strong) SKSpriteNode *pauseBg;
 @property (nonatomic, strong) SKSpriteNode *backButton;
-@property (nonatomic, strong) SKLabelNode *settingsButton;
+@property (nonatomic, strong) SKLabelNode *quitButton;
 @property (nonatomic, strong) SKLabelNode *instructionsButton;
 @property (nonatomic, strong) SKSpriteNode *instructionsBg;
+@property NSInteger instructionNumber;
 
-@property NSInteger direction; //0 up 1 down 2 right 3 left
 @property NSTimeInterval startTime;
 @property NSInteger timeLeft;
 @property BOOL inGame;
 
+@property NSInteger direction; //0 up 1 down 2 right 3 left nathan
+@property (nonatomic, strong) NSMutableArray *directionHistory;
 @property (nonatomic, strong) SKTextureAtlas *runningNathanAtlas;
 
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRightGestureRecognizer;
 
 @end
 @implementation GameScene
@@ -73,12 +79,17 @@
 }
 
 
+
 #pragma mark Setup
 
 #define MARGIN 20.0
 
--(void)didMoveToView:(SKView *)view {
-  /* Setup your scene here */
+- (void)didMoveToView:(SKView *)view {
+  if (self.onlyInstructions) {
+    self.inGame = NO;
+    [self viewInstructions];
+    return;
+  }
   
   [self setBackground];
   [self addUndoButton];
@@ -92,13 +103,15 @@
   [self addChild:self.playground];
   [self addNathan];
   
-  [self generateGraph:self.level + 3];
+  NSInteger numOfVertices = (NSInteger)ceil(self.level/2.0) + 3;
+  [self generateGraph:numOfVertices];
   [self positionVertices];
   [self drawEdges];
   
-  
+  self.instructionNumber = 0;
+  self.inGame = YES;
 }
--(void)addLevelLabel {
+- (void)addLevelLabel {
   SKLabelNode *levelLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   levelLabel.fontSize = 42.0;
   levelLabel.text = [NSString stringWithFormat:@"level %ld", (long)self.level];
@@ -108,7 +121,7 @@
   
 }
 
--(void)addTimerLabel {
+- (void)addTimerLabel {
   
   self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   self.timerLabel.fontSize = 42.0;
@@ -118,13 +131,13 @@
   [self addChild:self.timerLabel];
 }
 
--(void)addNathan {
+- (void)addNathan {
   self.nathan = [[NathanSpriteNode alloc] init];
   self.nathan.alpha = 0.0;
   [self.playground addChild:self.nathan];
 }
 
--(void)addUndoButton {
+- (void)addUndoButton {
   self.undoButton = [SKSpriteNode spriteNodeWithImageNamed:@"undo-button"];
   self.undoButton.anchorPoint = CGPointZero;
   self.undoButton.position = CGPointMake(MARGIN, MARGIN);
@@ -132,7 +145,7 @@
   [self addChild:self.undoButton];
 }
 
--(void)addPauseButton {
+- (void)addPauseButton {
   self.pauseButton = [SKSpriteNode spriteNodeWithImageNamed:@"pause-button"];
   self.pauseButton.anchorPoint = CGPointMake(1, 0);
   self.pauseButton.position = CGPointMake(self.size.width - MARGIN, MARGIN + 5);
@@ -141,14 +154,14 @@
   [self addChild:self.pauseButton];
 }
 
--(void)addRepositionButton {
+- (void)addRepositionButton {
   self.repositionButton = [SKSpriteNode spriteNodeWithImageNamed:@"shuffle-button"];
   self.repositionButton.anchorPoint = CGPointMake(0.5, 0);
   self.repositionButton.position = CGPointMake(self.size.width/2, MARGIN);
   [self addChild:self.repositionButton];
 }
 
--(void)setBackground {
+- (void)setBackground {
   SKSpriteNode *bg;
   if (self.level < 3) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-blue"];
@@ -161,7 +174,7 @@
   } else if (self.level < 11) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-orange"];
   } else {
-    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-orange"];
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-red"];
   }
   
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
@@ -176,7 +189,7 @@
 #define HOUSE_SIZE 50
 #define MARGIN_SIZE 30
 
--(CGPoint)positionForSquare:(NSInteger)square forRows:(NSInteger)rows forCols:(NSInteger)cols {
+- (CGPoint)positionForSquare:(NSInteger)square forRows:(NSInteger)rows forCols:(NSInteger)cols {
   NSInteger row = (square + cols - 1) / cols;
   CGFloat yPos = (row - 1) * (HOUSE_SIZE+MARGIN_SIZE) + HOUSE_SIZE/2 - self.playground.size.height/2;
   NSInteger col = square - (cols * (row - 1));
@@ -185,7 +198,7 @@
   return CGPointMake(xPos, yPos);
 }
 
--(void)positionVertices {
+- (void)positionVertices {
   //grid generation
   NSInteger cols = self.playground.size.width/(HOUSE_SIZE+MARGIN_SIZE);
   NSInteger rows = self.playground.size.height/(HOUSE_SIZE+MARGIN_SIZE);
@@ -238,7 +251,7 @@
   }
 }
 
--(void)generateGraph:(NSInteger)numOfVertices {
+- (void)generateGraph:(NSInteger)numOfVertices {
   
   for (int i = 0; i < numOfVertices; i++) {
     SKSpriteNode *vertex;
@@ -270,19 +283,20 @@
   
   //noise edges
   
-  NSInteger numOfNoiseEdges = numOfVertices / 2;
-  
+  NSInteger numOfNoiseEdges = numOfVertices / 3;
   for (int i = 0; i < numOfNoiseEdges; i++) {
-    SKSpriteNode *originVertex = self.vertices[i];
+    NSString *originVertex = self.vertices[i];
     NSMutableArray *adjacent = [self.edges objectForKey:originVertex];
-    
     while (1) {
-      SKSpriteNode *newAdjacent = self.vertices[arc4random() % numOfVertices];
-      if (![adjacent containsObject:newAdjacent]) {
+      NSString *newAdjacent = self.vertices[arc4random() % numOfVertices];
+      if (![adjacent containsObject:newAdjacent] && ![originVertex isEqualToString:newAdjacent]) {
         [adjacent addObject:newAdjacent];
         [[self.edges objectForKey:newAdjacent] addObject:originVertex];
         break;
       }
+      //max connection
+      if ([adjacent count] >= [self.vertices count] - 1)
+        break;
     }
   }
   [self.visitedVertices addObject:self.vertices[0]];
@@ -290,7 +304,7 @@
   
 }
 
--(void)drawEdges {
+- (void)drawEdges {
   NSMutableDictionary *added = [[NSMutableDictionary alloc] init];
   for (NSString *vertexName in self.edges) {
     
@@ -329,8 +343,8 @@
 #define POINTS_PER_SEC 250.0
 #define FADE_OUT_DURATION 0.1
 #define FADE_IN_DURATION 0.3
-#define UNDO_PENALTY 3.0
-#define REDRAW_PENALTY 3.0
+#define UNDO_PENALTY 2.0
+//#define REDRAW_PENALTY 1.0
 
 
 - (void)visitVertex:(NSString *)vertexName {
@@ -356,7 +370,7 @@
   if (self.direction == 1) {
     self.nathan.zPosition = -1;
   }
-  
+  [self.directionHistory addObject:[NSNumber numberWithLong:self.direction]];
   
   [self.nathan runAction:runAction withKey:@"runAction"];
   SKAction *fadeIn = [SKAction fadeAlphaTo:1.0 duration:FADE_IN_DURATION];
@@ -378,13 +392,54 @@
     [self emitFlashWithMessage:@"no moves to undo"];
     return;
   }
+  if ([self nathanIsMoving]) {
+    [self emitFlashWithMessage:@"thief must not move"];
+    return;
+  }
+  
+  
   self.startTime -= UNDO_PENALTY;
+  
   NSString *newVertexName = [self.visitedVertices objectAtIndex:[self.visitedVertices count] - 2];
   SKSpriteNode *newVertex = [self vertexWithName:newVertexName];
   
+  SKSpriteNode *currentVertex = [self vertexWithName:[self.visitedVertices lastObject]];
+  CGPoint targetPoint = newVertex.position;
+  CGPoint currentPosition = currentVertex.position;
+  CGPoint offset = CGPointMake(targetPoint.x - currentPosition.x, targetPoint.y - currentPosition.y);
+  CGFloat length = sqrtf(offset.x * offset.x + offset.y * offset.y);
+  CGFloat duration = length / POINTS_PER_SEC/ 4;
   
-  self.nathan.position = newVertex.position;
+  NSInteger lastDirection = [[self.directionHistory lastObject] integerValue];
+  if (lastDirection == 0)
+    self.direction = 1;
+  else if (lastDirection == 1)
+    self.direction = 2;
+  else if (lastDirection == 3)
+    self.direction = 4;
+  else
+    self.direction = 3;
+  
+  NSArray *textures = [self getTexturesFromDirection:offset];
+
+  SKAction *runAction = [SKAction repeatActionForever:
+                         [SKAction animateWithTextures:textures
+                                          timePerFrame:0.1f resize:NO restore:YES]];
+  
+  [self.nathan runAction:runAction withKey:@"runAction"];
+  SKAction *fadeIn = [SKAction fadeAlphaTo:1.0 duration:FADE_IN_DURATION];
+  SKAction *moveAction = [SKAction moveTo:targetPoint duration:duration];
+  SKAction *leaveGroup = [SKAction group:@[fadeIn, moveAction]];
+  SKAction *fadeOut = [SKAction fadeAlphaTo:0.0 duration:FADE_OUT_DURATION];
+  SKAction *sequence = [SKAction sequence :@[leaveGroup, fadeOut]];
+  [self.nathan runAction:sequence completion:^{
+    [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)UNDO_PENALTY]];
+
+    self.nathan.position = newVertex.position;
+  }];
+  
   [self.visitedVertices removeLastObject];
+  [self.directionHistory removeLastObject];
   
   SKTexture *unvisitedHouse = [SKTexture textureWithImageNamed:@"house-u"];
   SKTexture *currentHouse = [SKTexture textureWithImageNamed:@"house-c"];
@@ -397,7 +452,9 @@
     [self emitFlashWithMessage:@"thief must not move"];
     return;
   }
-  self.startTime -= REDRAW_PENALTY;
+  
+//  self.startTime -= REDRAW_PENALTY;
+//  [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)REDRAW_PENALTY]];
   
   SKNode *edge;
   while ((edge = [self.playground childNodeWithName:@"edge"]))
@@ -406,83 +463,95 @@
   [self drawEdges];
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   for (UITouch *touch in touches) {
-    CGPoint touchPoint;
-    
-    if (self.inGame)
-      touchPoint = [touch locationInNode:self];
-    else
-      touchPoint = [touch locationInNode:self.pauseBg];
-    
-    
-    if ([self.undoButton containsPoint:touchPoint]) {
-      [self undoMove];
+    if (self.instructionNumber > 0) {
       return;
-    } else if ([self.repositionButton containsPoint:touchPoint]) {
-      [self repositionVertices];
-      return;
-    } else if ([self.pauseButton containsPoint:touchPoint]) {
-      [self pauseGame];
-      return;
-    } else if ([self.backButton containsPoint:touchPoint]) {
-      [self resumeGame];
-      return;
-    } else if ([self.instructionsButton containsPoint:touchPoint]) {
-      [self viewInstructions];
-      return;
-      
     }
     
-    NSString *currentVertexName = [self.visitedVertices lastObject];
-    SKSpriteNode *currentVertex = [self vertexWithName:currentVertexName];
-    for (NSString *vertexName in self.vertices) {
-      SKSpriteNode *vertex = [self vertexWithName:vertexName];
-      touchPoint = [touch locationInNode:self.playground];
+    CGPoint touchPoint;
+    if (!self.inGame) {
+      touchPoint = [touch locationInNode:self.pauseBg];
+      if ([self.instructionsButton containsPoint:touchPoint]) {
+        [self viewInstructions];
+        return;
+      } else if ([self.backButton containsPoint:touchPoint]) {
+        [self resumeGame];
+        return;
+      } else if ([self.quitButton containsPoint:touchPoint]) {
+        [self backToIntro];
+        return;
+      }
+    
+    } else {
+      touchPoint = [touch locationInNode:self];
+      if ([self.undoButton containsPoint:touchPoint]) {
+        [self undoMove];
+        return;
+      } else if ([self.repositionButton containsPoint:touchPoint]) {
+        [self repositionVertices];
+        return;
+      } else if ([self.pauseButton containsPoint:touchPoint]) {
+        [self pauseGame];
+        return;
+      }
       
-      if ([vertex containsPoint:touchPoint] && [currentVertex containsPoint:self.nathan.position] && ![self nathanIsMoving]) {
-        if ([[self.edges objectForKey:currentVertexName] containsObject:vertexName]) {
-          if (![self.visitedVertices containsObject:vertexName] ||
-              ([self.visitedVertices count] == [self.vertices count] && vertexName == self.visitedVertices[0])) {
-            [self visitVertex:vertexName];
-            break;
-            
+     
+      NSString *currentVertexName = [self.visitedVertices lastObject];
+      SKSpriteNode *currentVertex = [self vertexWithName:currentVertexName];
+      for (NSString *vertexName in self.vertices) {
+        SKSpriteNode *vertex = [self vertexWithName:vertexName];
+        touchPoint = [touch locationInNode:self.playground];
+        
+        if ([vertex containsPoint:touchPoint] && [currentVertex containsPoint:self.nathan.position] && ![self nathanIsMoving]) {
+          if ([[self.edges objectForKey:currentVertexName] containsObject:vertexName]) {
+            if (![self.visitedVertices containsObject:vertexName] ||
+                ([self.visitedVertices count] == [self.vertices count] && vertexName == self.visitedVertices[0])) {
+              [self visitVertex:vertexName];
+              break;
+              
+            } else {
+              if (vertexName == self.visitedVertices[0])
+                [self emitFlashWithMessage:@"rob all houses first"];
+              else
+                [self emitFlashWithMessage:@"already visited"];
+            }
           } else {
-            if (vertexName == self.visitedVertices[0])
-              [self emitFlashWithMessage:@"rob all houses first"];
+            if (currentVertex == vertex)
+              [self emitFlashWithMessage:@"rob another house"];
             else
-              [self emitFlashWithMessage:@"already visited"];
+              [self emitFlashWithMessage:@"no path"];
+            
           }
         } else {
-          if (currentVertex == vertex)
-            [self emitFlashWithMessage:@"rob another house"];
-          else
-            [self emitFlashWithMessage:@"no path"];
-          
         }
-      } else {
       }
     }
   }
 }
 
--(void)checkWin {
+#define SCENE_TRANSITION_DURATION 1.0
+#define BONUS_FACTOR 0.75
+
+- (void)checkWin {
   if ([self.visitedVertices count] == [self.vertices count] + 1) {
     self.inGame = NO;
     WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
     wonScene.nextLevel = self.level + 1;
-    [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:1.0]];
+    wonScene.bonusSeconds = self.timeLeft*BONUS_FACTOR;
+    [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
   }
   
 }
--(void)lostGame {
+
+- (void)lostGame {
   self.inGame = NO;
   LostScene *lostScene = [[LostScene alloc] initWithSize:self.size];
   lostScene.level = self.level;
-  [self.view presentScene:lostScene transition:[SKTransition fadeWithDuration:1.0]];
+  [self.view presentScene:lostScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
 }
 
--(void)pauseGame {
+- (void)pauseGame {
   self.inGame = NO;
   self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:@"transition-screen"];
   self.pauseBg.zPosition = 10;
@@ -497,26 +566,24 @@
   self.backButton.position = CGPointMake(-deviceWidth/2 + MARGIN, deviceHeight/2 - MARGIN);
   [self.pauseBg addChild:self.backButton];
   
+  self.quitButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  self.quitButton.fontColor = [SKColor whiteColor];
+  self.quitButton.fontSize = 40.0;
+  self.quitButton.text = @"Quit Game";
+  self.quitButton.position = CGPointMake(0, -35);  [self.pauseBg addChild:self.quitButton];
+  
   self.instructionsButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   self.instructionsButton.fontColor = [SKColor whiteColor];
   self.instructionsButton.fontSize = 40.0;
   self.instructionsButton.text = @"Instructions";
-  
-  self.settingsButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
-  self.settingsButton.fontColor = [SKColor whiteColor];
-  self.settingsButton.fontSize = 40.0;
-  self.settingsButton.text = @"Settings";
-  
-  self.instructionsButton.position = CGPointMake(0, 2*MARGIN);
-  self.settingsButton.position = CGPointMake(0, -2*MARGIN);
+  self.instructionsButton.position = CGPointMake(0, 35);
   
   [self.pauseBg addChild:self.instructionsButton];
-  [self.pauseBg addChild:self.settingsButton];
   
 
 }
 
--(void)resumeGame {
+- (void)resumeGame {
   [self.pauseBg runAction:[SKAction fadeOutWithDuration:0.3] completion:^{
     [self.pauseBg removeAllChildren];
     [self.pauseBg removeFromParent];
@@ -524,93 +591,93 @@
   }];
 }
 
--(void)emitFlashWithMessage:(NSString *)message {
-  SKLabelNode *messageLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
-  messageLabel.fontSize = 40;
-  messageLabel.fontColor = [SKColor yellowColor];
-  messageLabel.position = CGPointMake(self.size.width/2, self.size.height/2);
-  messageLabel.text = message;
-  [self addChild:messageLabel];
-  
-  [messageLabel runAction:[SKAction fadeOutWithDuration:0.5]];
-}
 
--(void)viewInstructions {
+- (void)viewInstructions {
+  self.instructionNumber = 1;
+
+  CGFloat deviceHeight = self.size.height;
+  if (deviceHeight <= 480) {
+    self.deviceSuffix = @"-4";
+  } else if (deviceHeight <= 568) {
+    self.deviceSuffix = @"-5";
+  } else if (deviceHeight <= 667) {
+    self.deviceSuffix = @"-6";
+  } else {
+    self.deviceSuffix = @"";
+  }
   
-  self.instructionsBg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
-  self.instructionsBg.zPosition = 11;
+  NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
+  SKTexture *texture = [SKTexture textureWithImageNamed:imgName];
+  self.instructionsBg = [SKSpriteNode spriteNodeWithTexture:texture];
   self.instructionsBg.position = CGPointMake(self.size.width/2, self.size.height/2);
+  self.instructionsBg.zPosition = 15;
   [self addChild:self.instructionsBg];
   
-  SKTexture *visitedTexture = [SKTexture textureWithImageNamed:@"house-v"];
-  SKTexture *homeTexture = [SKTexture textureWithImageNamed:@"house-h"];
-  SKSpriteNode *v1 = [SKSpriteNode spriteNodeWithTexture:homeTexture];
-  v1.position = CGPointMake(-39, -90);
+  self.swipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRightInstruction:)];
+  self.swipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+  [self.view addGestureRecognizer:self.swipeRightGestureRecognizer];
   
-  SKTexture *unvisitedTexture = [SKTexture textureWithImageNamed:@"house-u"];
-  SKSpriteNode *v2 = [SKSpriteNode spriteNodeWithTexture:unvisitedTexture];
-  v2.position = CGPointMake(-80, 55);
+  self.swipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeftInstruction:)];
+  self.swipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+  [self.view addGestureRecognizer:self.swipeLeftGestureRecognizer];
   
-  SKTexture *currentTexture = [SKTexture textureWithImageNamed:@"house-c"];
-  SKSpriteNode *v3 = [SKSpriteNode spriteNodeWithTexture:currentTexture];
-  v3.position = CGPointMake(100, 20);
-  
-  [self.instructionsBg addChild:v1];
-  [self.instructionsBg addChild:v2];
-  [self.instructionsBg addChild:v3];
-  
-  SKSpriteNode *nathan = [[NathanSpriteNode alloc] init];
-  nathan.position = v1.position;
-  [self.instructionsBg addChild:nathan];
-  
-  SKLabelNode *instructionLabel1 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
-  instructionLabel1.fontColor = [SKColor yellowColor];
-  instructionLabel1.fontSize = 40.0;
-  instructionLabel1.position = CGPointMake(0, self.instructionsBg.size.height*3/4);
-  instructionLabel1.alpha = 0;
-  instructionLabel1.text = @"Help The Little Thief find";
-  
-  SKLabelNode *instructionLabel2 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
-  instructionLabel2.fontColor = [SKColor yellowColor];
-  instructionLabel2.fontSize = 40.0;
-  instructionLabel2.position = CGPointMake(0, self.instructionsBg.size.height*3/4 - 40);
-  instructionLabel2.alpha = 0;
-  instructionLabel2.text = @"a path to rob all houses";
-  
-  
-  SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.3];
-  SKAction *fadeInAction = [SKAction fadeInWithDuration:0.3];
-  SKAction *waitForRead = [SKAction waitForDuration:4];
-  SKAction *fadeSequence = [SKAction sequence:@[fadeInAction, waitForRead, fadeOutAction]];
-  
-  [instructionLabel1 runAction:fadeSequence];
-  [instructionLabel2 runAction:fadeSequence completion:^{
+  [self showInstructionsLabel];
+}
+
+- (void)swipeRightInstruction:(UISwipeGestureRecognizer *)sender
+{
+
+  self.instructionNumber--;
+  if (self.instructionNumber <= 0) {
+    [self.view removeGestureRecognizer:self.swipeRightGestureRecognizer];
+    [self.view removeGestureRecognizer:self.swipeLeftGestureRecognizer];
     
-  
-  
-  }];
-  
-  
-  
-  
-  [self.instructionsBg runAction:[SKAction waitForDuration:5] completion:^{
-    [self.instructionsBg removeAllChildren];
+    SKLabelNode *swipeInstruction = (SKLabelNode *)[self childNodeWithName:@"swipe instruction"];
+    if (swipeInstruction)
+      [swipeInstruction removeFromParent];
+    
+    if (self.onlyInstructions) {
+      [self backToIntro];
+      return;
+    }
     [self.instructionsBg removeFromParent];
-  }];
+
+    return;
+  }
+  NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
+  SKTexture *texture = [SKTexture textureWithImageNamed:imgName];
+  self.instructionsBg.texture = texture;
+}
+
+- (void)swipeLeftInstruction:(UISwipeGestureRecognizer *)sender
+{
   
-  
-  
-  
-  
+  self.instructionNumber++;
+  if (self.instructionNumber >= 13) {
+    [self.view removeGestureRecognizer:self.swipeLeftGestureRecognizer];
+    [self.view removeGestureRecognizer:self.swipeRightGestureRecognizer];
+    
+    if (self.onlyInstructions) {
+      [self backToIntro];
+      return;
+    }
+    self.instructionNumber = 0;
+    [self.instructionsBg removeFromParent];
+    return;
+  }
+  NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
+  SKTexture *texture = [SKTexture textureWithImageNamed:imgName];
+  self.instructionsBg.texture = texture;
   
 }
 
 #define GAME_DURATION 41
 
--(void)update:(CFTimeInterval)currentTime {
+- (void)update:(CFTimeInterval)currentTime {
   if (!self.startTime) {
     self.startTime = currentTime;
-    self.inGame = YES;
+    if (self.bonusSeconds)
+      self.startTime += self.bonusSeconds;
   }
 
   
@@ -619,6 +686,7 @@
     if (countDownInt < GAME_DURATION) {
       self.timeLeft = GAME_DURATION - countDownInt;
       self.timerLabel.text = [NSString stringWithFormat:@"%ld", (long)self.timeLeft];
+      self.bonusSeconds = self.timeLeft;
     } else {
       [self lostGame];
     }
@@ -650,7 +718,7 @@
 }
 
 
--(NSArray *)getTexturesFromDirection:(CGPoint)offset {
+- (NSArray *)getTexturesFromDirection:(CGPoint)offset {
   if (offset.x >= 0 && offset.y >= 0) {
     if (offset.x > offset.y) {
       self.direction = 2;
@@ -689,5 +757,49 @@
   
 }
 
+- (void)emitFlashWithMessage:(NSString *)message {
+  [self emitFlashWithMessage:message forDuration:0.5];
+}
+
+- (void)emitFlashWithMessage:(NSString *)message forDuration:(CGFloat)duration {
+  SKLabelNode *messageLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  messageLabel.fontSize = 40;
+  messageLabel.zPosition = 20;
+  messageLabel.fontColor = [SKColor yellowColor];
+  messageLabel.position = CGPointMake(self.size.width/2, self.size.height/2);
+  messageLabel.text = message;
+  [self addChild:messageLabel];
+  [messageLabel runAction:[SKAction fadeOutWithDuration:duration]];
+}
+
+- (void)showInstructionsLabel {
+  SKLabelNode *messageLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  messageLabel.name = @"swipe instruction";
+  messageLabel.fontSize = 50;
+  messageLabel.zPosition = 20;
+  messageLabel.fontColor = [SKColor whiteColor];
+  messageLabel.position = CGPointMake(self.size.width/2, self.size.height/5);
+  messageLabel.text = @"Instructions";
+  messageLabel.alpha = 0;
+  
+  [self addChild:messageLabel];
+  SKAction *fadeIn = [SKAction fadeInWithDuration:0.5];
+  SKAction *wait = [SKAction waitForDuration:2];
+  SKAction *fadeOut = [SKAction fadeOutWithDuration:0.2];
+  SKAction *sequence = [SKAction sequence:@[fadeIn, wait, fadeOut]];
+  [messageLabel runAction:sequence completion:^{
+    messageLabel.text = @"Swipe to navigate";
+    SKAction *fadeIn = [SKAction fadeInWithDuration:0.5];
+    SKAction *wait = [SKAction waitForDuration:4];
+    SKAction *fadeOut = [SKAction fadeOutWithDuration:0.2];
+    SKAction *sequence = [SKAction sequence:@[fadeIn, wait, fadeOut]];
+    [messageLabel runAction:sequence];
+  }];
+}
+
+- (void)backToIntro {
+  IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
+  [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
+}
 
 @end
