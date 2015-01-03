@@ -120,9 +120,11 @@
 - (void)addLevelLabel {
   SKLabelNode *levelLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   levelLabel.fontSize = 42.0;
-  levelLabel.text = [NSString stringWithFormat:@"level %ld", (long)self.level];
+  levelLabel.text = [NSString stringWithFormat:@"lvl %ld", (long)self.level];
   levelLabel.color = [SKColor whiteColor];
-  levelLabel.position = CGPointMake(2.5*MARGIN, self.size.height - 2.5*MARGIN);
+  levelLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
+  levelLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
+  levelLabel.position = CGPointMake(MARGIN, self.size.height - MARGIN);
   [self addChild:levelLabel];
   
 }
@@ -130,9 +132,12 @@
 - (void)addTimerLabel {
   
   self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  self.timerLabel.text = [NSString stringWithFormat:@"%d", 999];
   self.timerLabel.fontSize = 42.0;
   self.timerLabel.color = [SKColor whiteColor];
-  self.timerLabel.position = CGPointMake(self.size.width - 1.5*MARGIN, self.size.height - 2.5*MARGIN);
+  self.timerLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeRight;
+  self.timerLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
+  self.timerLabel.position = CGPointMake(self.size.width - MARGIN, self.size.height - MARGIN);
   
   [self addChild:self.timerLabel];
 }
@@ -169,15 +174,15 @@
 
 - (void)setBackground {
   SKSpriteNode *bg;
-  if (self.level < 7) {
-    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-blue"];
-  } else if (self.level < 13) {
+  if (self.level < 6) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
-  } else if (self.level < 19) {
+  } else if (self.level < 11) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-blue"];
+  } else if (self.level < 16) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-yellow"];
-  } else if (self.level < 25) {
+  } else if (self.level < 21) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-grey"];
-  } else if (self.level < 31) {
+  } else if (self.level < 26) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-orange"];
   } else {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-red"];
@@ -372,7 +377,7 @@
 #define FADE_OUT_DURATION 0.1
 #define FADE_IN_DURATION 0.3
 #define UNDO_PENALTY 2.0
-//#define REDRAW_PENALTY 1.0
+#define REDRAW_PENALTY 1.0
 
 
 - (void)visitVertex:(NSString *)vertexName {
@@ -481,8 +486,8 @@
     return;
   }
   
-//  self.startTime -= REDRAW_PENALTY;
-//  [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)REDRAW_PENALTY]];
+  self.startTime -= REDRAW_PENALTY;
+  [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)REDRAW_PENALTY]];
   
   SKNode *edge;
   while ((edge = [self.playground childNodeWithName:@"edge"]))
@@ -605,8 +610,18 @@
   self.instructionsButton.fontSize = 40.0;
   self.instructionsButton.text = @"Instructions";
   self.instructionsButton.position = CGPointMake(0, 35);
-  
   [self.pauseBg addChild:self.instructionsButton];
+  NSString *hs = [[NSUserDefaults standardUserDefaults] objectForKey:@"HighScore"];
+  if (hs) {
+    SKLabelNode *highScore = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+    highScore.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    highScore.fontSize = 30.0;
+    highScore.text = [NSString stringWithFormat:@"High score: lvl %@", hs];
+    highScore.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
+    highScore.position = CGPointMake(0, self.pauseBg.size.height/2 - MARGIN -10);
+    [self.pauseBg addChild:highScore];
+  }
+
   
 
 }
@@ -690,6 +705,7 @@
 
 #define GAME_DURATION 41
 //#define GAME_DURATION 10000
+
 - (void)update:(CFTimeInterval)currentTime {
   if (!self.startTime) {
     self.startTime = currentTime;
@@ -697,18 +713,18 @@
       self.startTime += self.bonusSeconds;
   }
 
-  
+  NSInteger gameDuration = ceil(self.level/5.0) * GAME_DURATION;
   if (self.inGame) {
     int countDownInt = (int)(currentTime - self.startTime);
-    if (countDownInt < GAME_DURATION) {
-      self.timeLeft = GAME_DURATION - countDownInt;
+    if (countDownInt < gameDuration) {
+      self.timeLeft = gameDuration - countDownInt;
       self.timerLabel.text = [NSString stringWithFormat:@"%ld", (long)self.timeLeft];
       self.bonusSeconds = self.timeLeft;
     } else {
       [self lostGame];
     }
   } else {
-    self.startTime = currentTime - GAME_DURATION + self.timeLeft;
+    self.startTime = currentTime - gameDuration + self.timeLeft;
   }
 }
 
@@ -782,7 +798,7 @@
   SKLabelNode *messageLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   messageLabel.fontSize = 40;
   messageLabel.zPosition = 20;
-  messageLabel.fontColor = [SKColor yellowColor];
+  messageLabel.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
   messageLabel.position = CGPointMake(self.size.width/2, self.size.height/2);
   messageLabel.text = message;
   [self addChild:messageLabel];

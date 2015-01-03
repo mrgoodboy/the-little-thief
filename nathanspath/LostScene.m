@@ -21,9 +21,9 @@
   
   //high score stuff
   NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
-  if (!highScore || self.level > highScore) {
-    [[NSUserDefaults standardUserDefaults] setInteger:self.level forKey:@"HighScore"];
-    highScore = self.level;
+  if (!highScore || self.level - 1 > highScore) {
+    [[NSUserDefaults standardUserDefaults] setInteger:self.level - 1 forKey:@"HighScore"];
+    highScore = self.level - 1;
   }
     
   
@@ -31,7 +31,7 @@
   SKLabelNode *playAgainText = [[SKLabelNode alloc] initWithFontNamed:@"SueEllenFrancisco"];
   playAgainText.fontSize = 40.0;
   playAgainText.text = [NSString stringWithFormat:@"You were caught!"];
-  playAgainText.fontColor = [SKColor yellowColor];
+  playAgainText.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
   playAgainText.position = CGPointMake(self.size.width/2, self.size.height*3/4);
   [self addChild:playAgainText];
   SKAction *wait = [SKAction waitForDuration:1.2];
@@ -41,10 +41,10 @@
     SKNode *levelReached = [SKNode node];
     SKLabelNode *a = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     a.fontSize = 40.0;
-    a.fontColor = [SKColor yellowColor];
+    a.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
     SKLabelNode *b = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     b.fontSize = 40.0;
-    b.fontColor = [SKColor yellowColor];
+    b.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
     NSString *st1 = [NSString stringWithFormat:@"level reached: %ld", (long)self.level];
     NSString *st2 = [NSString stringWithFormat:@"highest reached: %lu", (long)highScore];;
     b.position = CGPointMake(b.position.x, b.position.y - a.frame.size.height - 50);

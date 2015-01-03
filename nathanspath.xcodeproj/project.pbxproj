@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB4508B01A57661800A9FFFF /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = AB4508AF1A57661800A9FFFF /* spark.png */; };
 		AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */; };
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
 		ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB4508AF1A57661800A9FFFF /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LostScene.h; sourceTree = "<group>"; };
 		AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LostScene.m; sourceTree = "<group>"; };
 		ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SueEllenFrancisco.ttf; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 		ABB169E01A4F6A32004A90D6 /* atlases */ = {
 			isa = PBXGroup;
 			children = (
+				AB4508AF1A57661800A9FFFF /* spark.png */,
 				ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */,
 			);
 			name = atlases;
@@ -255,6 +258,7 @@
 				ABEC7A781A49BF770065E993 /* LaunchScreen.xib in Resources */,
 				ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */,
 				ABEC7A751A49BF770065E993 /* Images.xcassets in Resources */,
+				AB4508B01A57661800A9FFFF /* spark.png in Resources */,
 				ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */,
 				ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */,
 				ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */,
