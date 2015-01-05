@@ -34,6 +34,8 @@
 @property (nonatomic, strong) SKLabelNode *instructionsButton;
 @property (nonatomic, strong) SKSpriteNode *instructionsBg;
 @property NSInteger instructionNumber;
+@property (nonatomic, strong) SKLabelNode *instructionsLabel;
+
 
 @property NSTimeInterval startTime;
 @property NSInteger timeLeft;
@@ -97,6 +99,7 @@
   NSString *path = [NSString stringWithFormat:@"%@/bg-music.mp3", [[NSBundle mainBundle] resourcePath]];
   self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
   self.player.numberOfLoops = -1;
+  [self.player prepareToPlay];
   [self.player play];
   
   NSString *runPath = [NSString stringWithFormat:@"%@/running.wav", [[NSBundle mainBundle] resourcePath]];
@@ -679,7 +682,20 @@
 }
 
 
+- (void)addInstructionLabel {
+  self.instructionsLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  self.instructionsLabel.fontSize = 25.0;
+  self.instructionsLabel.zPosition = 20;
+  self.instructionsLabel.text = @"Instructions";
+  self.instructionsLabel.color = [SKColor whiteColor];
+  self.instructionsLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
+  self.instructionsLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
+  self.instructionsLabel.position = CGPointMake(MARGIN, self.size.height - MARGIN);
+  [self addChild:self.instructionsLabel];
+}
+
 - (void)viewInstructions {
+  [self addInstructionLabel];
   self.instructionNumber = 1;
 
   NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
@@ -697,7 +713,6 @@
   self.swipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
   [self.view addGestureRecognizer:self.swipeLeftGestureRecognizer];
   
-  [self showInstructionsLabel];
 }
 
 - (void)swipeRightInstruction:(UISwipeGestureRecognizer *)sender
@@ -716,8 +731,10 @@
     
     if (self.onlyInstructions) {
       [self backToIntro];
+      
       return;
     }
+    [self.instructionsLabel removeFromParent];
     [self.instructionsBg removeFromParent];
 
     return;
@@ -740,6 +757,7 @@
       return;
     }
     self.instructionNumber = 0;
+    [self.instructionsLabel removeFromParent];
     [self.instructionsBg removeFromParent];
     return;
   }
@@ -849,31 +867,6 @@
   messageLabel.text = message;
   [self addChild:messageLabel];
   [messageLabel runAction:[SKAction fadeOutWithDuration:duration]];
-}
-
-- (void)showInstructionsLabel {
-  SKLabelNode *messageLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
-  messageLabel.name = @"swipe instruction";
-  messageLabel.fontSize = 50;
-  messageLabel.zPosition = 20;
-  messageLabel.fontColor = [SKColor whiteColor];
-  messageLabel.position = CGPointMake(self.size.width/2, self.size.height/5);
-  messageLabel.text = @"Instructions";
-  messageLabel.alpha = 0;
-  
-  [self addChild:messageLabel];
-  SKAction *fadeIn = [SKAction fadeInWithDuration:0.5];
-  SKAction *wait = [SKAction waitForDuration:2];
-  SKAction *fadeOut = [SKAction fadeOutWithDuration:0.2];
-  SKAction *sequence = [SKAction sequence:@[fadeIn, wait, fadeOut]];
-  [messageLabel runAction:sequence completion:^{
-    messageLabel.text = @"Swipe to navigate";
-    SKAction *fadeIn = [SKAction fadeInWithDuration:0.5];
-    SKAction *wait = [SKAction waitForDuration:4];
-    SKAction *fadeOut = [SKAction fadeOutWithDuration:0.2];
-    SKAction *sequence = [SKAction sequence:@[fadeIn, wait, fadeOut]];
-    [messageLabel runAction:sequence];
-  }];
 }
 
 - (void)backToIntro {

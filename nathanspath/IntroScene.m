@@ -21,22 +21,21 @@
 @property SKLabelNode *townLabel;
 @property (nonatomic, strong) SKSpriteNode *previousTown;
 @property (nonatomic, strong) SKSpriteNode *nextTown;
-
 @property (nonatomic, strong) AVAudioPlayer *player;
 @end
 @implementation IntroScene
 
 - (void)startBgMusic {
   NSString *path = [NSString stringWithFormat:@"%@/intro-music.wav", [[NSBundle mainBundle] resourcePath]];
+  NSLog(@"%@", path);
   self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
-  self.player.volume = 0.05;
   self.player.numberOfLoops = -1;
   [self.player prepareToPlay];
   [self.player play];
 }
 
 - (void)didMoveToView:(SKView *)view {
-
+  
   
   if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
   {
@@ -52,7 +51,24 @@
   {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [self viewInstructions];
+    self.backgroundColor = [SKColor blackColor];
+    SKLabelNode *instrLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+    instrLabel.fontSize = 42.0;
+    instrLabel.text = @"Instructions";
+    instrLabel.color = [SKColor whiteColor];
+    instrLabel.position = CGPointMake(self.size.width/2, self.size.height/2);
+    instrLabel.alpha = 0;
+    [self addChild:instrLabel];
+    SKAction *fadeIn = [SKAction fadeAlphaTo:1.0 duration:0.3];
+    SKAction *wait = [SKAction waitForDuration:1.7];
+    SKAction *fadeOut = [SKAction fadeAlphaTo:0.0 duration:0.3];
+    SKAction *sequence = [SKAction sequence :@[fadeIn, wait, fadeOut]];
+    
+    [instrLabel runAction:sequence completion:^{
+      [self viewInstructions];
+    }];
+    
+    
   }
   
 }
@@ -60,18 +76,18 @@
 - (void)setTowns {
   NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
   NSMutableArray *tempTowns = [[NSMutableArray alloc] initWithArray:@[@"Greentown"]];
-  if (!highScore)
-    return;
-  if (highScore > 5)
-    [tempTowns addObject:@"Bluetown"];
-  if (highScore > 10)
-    [tempTowns addObject:@"Yellowtown"];
-  if (highScore > 15)
-    [tempTowns addObject:@"Greytown"];
-  if (highScore > 20)
-    [tempTowns addObject:@"Orangetown"];
-  if (highScore > 25)
-    [tempTowns addObject:@"Redtown"];
+  if (highScore) {
+    if (highScore > 5)
+      [tempTowns addObject:@"Bluetown"];
+    if (highScore > 10)
+      [tempTowns addObject:@"Yellowtown"];
+    if (highScore > 15)
+      [tempTowns addObject:@"Greytown"];
+    if (highScore > 20)
+      [tempTowns addObject:@"Orangetown"];
+    if (highScore > 25)
+      [tempTowns addObject:@"Redtown"];
+  }
   self.towns = tempTowns;
   self.selectedTownIndex = [self.towns count] - 1;
 }
@@ -151,7 +167,7 @@
       [self viewInstructions];
       return;
     }
-
+    
     
     if ([self.previousTown containsPoint:position]) {
       if (self.selectedTownIndex == 0)
@@ -176,7 +192,7 @@
     }
     
     self.townLabel.text = [self.towns objectAtIndex:self.selectedTownIndex];
- 
+    
     
     
   }
@@ -184,30 +200,30 @@
 
 - (void)handleSwipe:(UISwipeGestureRecognizer *)sender
 {
-    CGPoint touchLocation = [sender locationInView:sender.view];
-    touchLocation = [self convertPointFromView:touchLocation];
-
-    if (touchLocation.y < self.size.height/2) {
-      [self doVolumeFade];
-      SKAction *swooshSound = [SKAction playSoundFileNamed:@"swoosh.wav" waitForCompletion:NO];
-      SKAction *fadeOut = [SKAction fadeOutWithDuration:0.2];
-      SKAction *runAction = [SKAction moveBy:CGVectorMake(self.size.width, 0) duration:0.3];
-      runAction.timingMode = SKActionTimingEaseIn;
-      [self.arrow runAction:fadeOut];
-      [self.previousTown runAction:fadeOut];
-      [self.nextTown runAction:fadeOut];
-      [self.townLabel runAction:fadeOut];
-      [self.nathan runAction:swooshSound];
-      [self.nathan runAction:runAction completion:^{
-        [self.view removeGestureRecognizer:self.gestureRecognizer];
-        GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
-        gameScene.level = (self.selectedTownIndex * 5) + 1;
-//        gameScene.level = 42;
-        gameScene.onlyInstructions = NO;
-        [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.5]];
-      }];
-
-    }
+  CGPoint touchLocation = [sender locationInView:sender.view];
+  touchLocation = [self convertPointFromView:touchLocation];
+  
+  if (touchLocation.y < self.size.height/2) {
+    [self doVolumeFade];
+    SKAction *swooshSound = [SKAction playSoundFileNamed:@"swoosh.wav" waitForCompletion:NO];
+    SKAction *fadeOut = [SKAction fadeOutWithDuration:0.2];
+    SKAction *runAction = [SKAction moveBy:CGVectorMake(self.size.width, 0) duration:0.3];
+    runAction.timingMode = SKActionTimingEaseIn;
+    [self.arrow runAction:fadeOut];
+    [self.previousTown runAction:fadeOut];
+    [self.nextTown runAction:fadeOut];
+    [self.townLabel runAction:fadeOut];
+    [self.nathan runAction:swooshSound];
+    [self.nathan runAction:runAction completion:^{
+      [self.view removeGestureRecognizer:self.gestureRecognizer];
+      GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
+      gameScene.level = (self.selectedTownIndex * 5) + 1;
+      //        gameScene.level = 42;
+      gameScene.onlyInstructions = NO;
+      [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.5]];
+    }];
+    
+  }
 }
 
 - (void)update:(NSTimeInterval)currentTime {
