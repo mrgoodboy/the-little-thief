@@ -8,6 +8,7 @@
 
 #import "IntroScene.h"
 #import "GameScene.h"
+#import "AVFoundation/AVFoundation.h"
 
 @interface IntroScene ()
 @property (nonatomic, strong) SKSpriteNode *bg;
@@ -20,8 +21,19 @@
 @property SKLabelNode *townLabel;
 @property (nonatomic, strong) SKSpriteNode *previousTown;
 @property (nonatomic, strong) SKSpriteNode *nextTown;
+
+@property (nonatomic, strong) AVAudioPlayer *player;
 @end
 @implementation IntroScene
+
+- (void)startBgMusic {
+  NSString *path = [NSString stringWithFormat:@"%@/intro-music.wav", [[NSBundle mainBundle] resourcePath]];
+  self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+  self.player.volume = 0.05;
+  self.player.numberOfLoops = -1;
+  [self.player prepareToPlay];
+  [self.player play];
+}
 
 - (void)didMoveToView:(SKView *)view {
 
@@ -33,6 +45,8 @@
     self.gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
     self.gestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:self.gestureRecognizer];
+    [self startBgMusic];
+    
   }
   else
   {
@@ -123,6 +137,8 @@
 }
 
 - (void)viewInstructions {
+  [self doVolumeFade];
+  [self playButtonSound];
   GameScene *gameScene = [[GameScene alloc] initWithSize:self.size];
   gameScene.onlyInstructions = YES;
   [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.0]];
@@ -135,6 +151,7 @@
       [self viewInstructions];
       return;
     }
+
     
     if ([self.previousTown containsPoint:position]) {
       if (self.selectedTownIndex == 0)
@@ -144,6 +161,7 @@
         self.previousTown.alpha = UNAVAILABLE_ALPHA;
       if (self.selectedTownIndex < [self.towns count] - 1)
         self.nextTown.alpha = 1;
+      [self playButtonSound];
     }
     
     if ([self.nextTown containsPoint:position]) {
@@ -154,6 +172,7 @@
         self.nextTown.alpha = UNAVAILABLE_ALPHA;
       if (self.selectedTownIndex > 0)
         self.previousTown.alpha = 1;
+      [self playButtonSound];
     }
     
     self.townLabel.text = [self.towns objectAtIndex:self.selectedTownIndex];
@@ -169,19 +188,21 @@
     touchLocation = [self convertPointFromView:touchLocation];
 
     if (touchLocation.y < self.size.height/2) {
+      [self doVolumeFade];
+      SKAction *swooshSound = [SKAction playSoundFileNamed:@"swoosh.wav" waitForCompletion:NO];
       SKAction *fadeOut = [SKAction fadeOutWithDuration:0.2];
-      
       SKAction *runAction = [SKAction moveBy:CGVectorMake(self.size.width, 0) duration:0.3];
       runAction.timingMode = SKActionTimingEaseIn;
       [self.arrow runAction:fadeOut];
       [self.previousTown runAction:fadeOut];
       [self.nextTown runAction:fadeOut];
       [self.townLabel runAction:fadeOut];
+      [self.nathan runAction:swooshSound];
       [self.nathan runAction:runAction completion:^{
         [self.view removeGestureRecognizer:self.gestureRecognizer];
         GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
-//        gameScene.level = (self.selectedTownIndex * 5) + 1;
-        gameScene.level = 42;
+        gameScene.level = (self.selectedTownIndex * 5) + 1;
+//        gameScene.level = 42;
         gameScene.onlyInstructions = NO;
         [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.5]];
       }];
@@ -193,5 +214,25 @@
   
   
 }
+
+-(void)doVolumeFade
+{
+  if (self.player.volume > 0.1) {
+    self.player.volume = self.player.volume - 0.1;
+    [self performSelector:@selector(doVolumeFade) withObject:nil afterDelay:0.1];
+  } else {
+    // Stop and get the sound ready for playing again
+    [self.player stop];
+    self.player.currentTime = 0;
+    [self.player prepareToPlay];
+    self.player.volume = 1.0;
+  }
+}
+
+- (void)playButtonSound {
+  SKAction *buttonSound = [SKAction playSoundFileNamed:@"button-click.wav" waitForCompletion:NO];
+  [self runAction:buttonSound];
+}
+
 
 @end

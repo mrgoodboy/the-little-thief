@@ -8,11 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		AB4508B01A57661800A9FFFF /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = AB4508AF1A57661800A9FFFF /* spark.png */; };
+		AB4508B41A5772CF00A9FFFF /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB4508B31A5772CF00A9FFFF /* GameKit.framework */; };
 		AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */; };
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
 		ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
 		ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */ = {isa = PBXBuildFile; fileRef = ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */; };
 		ABB169E31A4F6FAF004A90D6 /* runningNathan.atlas in Resources */ = {isa = PBXBuildFile; fileRef = ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */; };
+		ABBDAB641A59F6EE00D127E6 /* button-click.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB5C1A59F6EE00D127E6 /* button-click.wav */; };
+		ABBDAB651A59F6EE00D127E6 /* door-open.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB5D1A59F6EE00D127E6 /* door-open.wav */; };
+		ABBDAB661A59F6EE00D127E6 /* game-over.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB5E1A59F6EE00D127E6 /* game-over.wav */; };
+		ABBDAB681A59F6EE00D127E6 /* running.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB601A59F6EE00D127E6 /* running.wav */; };
+		ABBDAB6F1A59F9C900D127E6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBDAB6E1A59F9C900D127E6 /* AVFoundation.framework */; };
+		ABBDAB711A59FBFF00D127E6 /* intro-music.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB701A59FBFF00D127E6 /* intro-music.wav */; };
+		ABBDAB791A5A012400D127E6 /* undo-move.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB781A5A012400D127E6 /* undo-move.wav */; };
+		ABBDAB7B1A5A019F00D127E6 /* error.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB7A1A5A019F00D127E6 /* error.wav */; };
+		ABBDAB7D1A5A080300D127E6 /* change-slide.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB7C1A5A080300D127E6 /* change-slide.wav */; };
+		ABBDAB821A5A0F8800D127E6 /* bg-music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB801A5A0F8800D127E6 /* bg-music.mp3 */; };
+		ABBDAB831A5A0F8800D127E6 /* swoosh.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB811A5A0F8800D127E6 /* swoosh.wav */; };
+		ABBDAB861A5A104A00D127E6 /* win1.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB841A5A104A00D127E6 /* win1.wav */; };
+		ABBDAB871A5A104A00D127E6 /* win2.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDAB851A5A104A00D127E6 /* win2.wav */; };
 		ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */; };
 		ABEC7A651A49BF770065E993 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A641A49BF770065E993 /* main.m */; };
 		ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A671A49BF770065E993 /* AppDelegate.m */; };
@@ -39,10 +53,24 @@
 
 /* Begin PBXFileReference section */
 		AB4508AF1A57661800A9FFFF /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		AB4508B31A5772CF00A9FFFF /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LostScene.h; sourceTree = "<group>"; };
 		AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LostScene.m; sourceTree = "<group>"; };
 		ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SueEllenFrancisco.ttf; sourceTree = "<group>"; };
 		ABB169E11A4F6FAF004A90D6 /* runningNathan.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = runningNathan.atlas; sourceTree = "<group>"; };
+		ABBDAB5C1A59F6EE00D127E6 /* button-click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-click.wav"; sourceTree = "<group>"; };
+		ABBDAB5D1A59F6EE00D127E6 /* door-open.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "door-open.wav"; sourceTree = "<group>"; };
+		ABBDAB5E1A59F6EE00D127E6 /* game-over.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "game-over.wav"; sourceTree = "<group>"; };
+		ABBDAB601A59F6EE00D127E6 /* running.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = running.wav; sourceTree = "<group>"; };
+		ABBDAB6E1A59F9C900D127E6 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		ABBDAB701A59FBFF00D127E6 /* intro-music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "intro-music.wav"; sourceTree = "<group>"; };
+		ABBDAB781A5A012400D127E6 /* undo-move.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "undo-move.wav"; sourceTree = "<group>"; };
+		ABBDAB7A1A5A019F00D127E6 /* error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = error.wav; sourceTree = "<group>"; };
+		ABBDAB7C1A5A080300D127E6 /* change-slide.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "change-slide.wav"; sourceTree = "<group>"; };
+		ABBDAB801A5A0F8800D127E6 /* bg-music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "bg-music.mp3"; sourceTree = "<group>"; };
+		ABBDAB811A5A0F8800D127E6 /* swoosh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swoosh.wav; sourceTree = "<group>"; };
+		ABBDAB841A5A104A00D127E6 /* win1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win1.wav; sourceTree = "<group>"; };
+		ABBDAB851A5A104A00D127E6 /* win2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win2.wav; sourceTree = "<group>"; };
 		ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroScene.h; sourceTree = "<group>"; };
 		ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroScene.m; sourceTree = "<group>"; };
 		ABEC7A5F1A49BF770065E993 /* nathanspath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nathanspath.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +100,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABBDAB6F1A59F9C900D127E6 /* AVFoundation.framework in Frameworks */,
+				AB4508B41A5772CF00A9FFFF /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,9 +132,30 @@
 			name = atlases;
 			sourceTree = "<group>";
 		};
+		ABBDAB6B1A59F6FD00D127E6 /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				ABBDAB5C1A59F6EE00D127E6 /* button-click.wav */,
+				ABBDAB781A5A012400D127E6 /* undo-move.wav */,
+				ABBDAB5D1A59F6EE00D127E6 /* door-open.wav */,
+				ABBDAB801A5A0F8800D127E6 /* bg-music.mp3 */,
+				ABBDAB811A5A0F8800D127E6 /* swoosh.wav */,
+				ABBDAB5E1A59F6EE00D127E6 /* game-over.wav */,
+				ABBDAB7C1A5A080300D127E6 /* change-slide.wav */,
+				ABBDAB701A59FBFF00D127E6 /* intro-music.wav */,
+				ABBDAB7A1A5A019F00D127E6 /* error.wav */,
+				ABBDAB841A5A104A00D127E6 /* win1.wav */,
+				ABBDAB851A5A104A00D127E6 /* win2.wav */,
+				ABBDAB601A59F6EE00D127E6 /* running.wav */,
+			);
+			name = sounds;
+			sourceTree = "<group>";
+		};
 		ABEC7A561A49BF770065E993 = {
 			isa = PBXGroup;
 			children = (
+				ABBDAB6E1A59F9C900D127E6 /* AVFoundation.framework */,
+				AB4508B31A5772CF00A9FFFF /* GameKit.framework */,
 				ABEC7A611A49BF770065E993 /* nathanspath */,
 				ABEC7A801A49BF770065E993 /* nathanspathTests */,
 				ABEC7A601A49BF770065E993 /* Products */,
@@ -123,6 +174,7 @@
 		ABEC7A611A49BF770065E993 /* nathanspath */ = {
 			isa = PBXGroup;
 			children = (
+				ABBDAB6B1A59F6FD00D127E6 /* sounds */,
 				ABB169D01A4F42BE004A90D6 /* fonts */,
 				ABB169E01A4F6A32004A90D6 /* atlases */,
 				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
@@ -224,6 +276,11 @@
 					ABEC7A5E1A49BF770065E993 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = XTKM9ER4YN;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 					ABEC7A7C1A49BF770065E993 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -256,10 +313,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABEC7A781A49BF770065E993 /* LaunchScreen.xib in Resources */,
+				ABBDAB661A59F6EE00D127E6 /* game-over.wav in Resources */,
+				ABBDAB831A5A0F8800D127E6 /* swoosh.wav in Resources */,
+				ABBDAB7B1A5A019F00D127E6 /* error.wav in Resources */,
+				ABBDAB711A59FBFF00D127E6 /* intro-music.wav in Resources */,
+				ABBDAB681A59F6EE00D127E6 /* running.wav in Resources */,
+				ABBDAB7D1A5A080300D127E6 /* change-slide.wav in Resources */,
 				ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */,
+				ABBDAB791A5A012400D127E6 /* undo-move.wav in Resources */,
 				ABEC7A751A49BF770065E993 /* Images.xcassets in Resources */,
+				ABBDAB871A5A104A00D127E6 /* win2.wav in Resources */,
+				ABBDAB641A59F6EE00D127E6 /* button-click.wav in Resources */,
 				AB4508B01A57661800A9FFFF /* spark.png in Resources */,
+				ABBDAB821A5A0F8800D127E6 /* bg-music.mp3 in Resources */,
+				ABBDAB651A59F6EE00D127E6 /* door-open.wav in Resources */,
 				ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */,
+				ABBDAB861A5A104A00D127E6 /* win1.wav in Resources */,
 				ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */,
 				ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */,
 			);

@@ -13,6 +13,8 @@
 #import "NathanSpriteNode.h"
 #include "stdlib.h"
 
+#import "AVFoundation/AVFoundation.h"
+
 @interface GameScene ()
 
 @property NSString *deviceSuffix; //for instructions
@@ -43,6 +45,9 @@
 
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeRightGestureRecognizer;
+
+@property (nonatomic, strong) AVAudioPlayer *player; //bg music
+@property (nonatomic, strong) AVAudioPlayer *runPlayer;
 
 //game config
 @property NSInteger sizeChangeLevel; //level for size change
@@ -87,6 +92,18 @@
 
 #define MARGIN 20.0
 
+//also sets up running
+- (void)startBgMusic {
+  NSString *path = [NSString stringWithFormat:@"%@/bg-music.mp3", [[NSBundle mainBundle] resourcePath]];
+  self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+  self.player.numberOfLoops = -1;
+  [self.player play];
+  
+  NSString *runPath = [NSString stringWithFormat:@"%@/running.wav", [[NSBundle mainBundle] resourcePath]];
+  self.runPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:runPath] error:nil];
+  self.runPlayer.numberOfLoops = -1;
+}
+
 - (void)didMoveToView:(SKView *)view {
   [self mySetDeviceSuffix];
   
@@ -96,13 +113,17 @@
     return;
   }
   
-
+  
+  
   [self setBackground];
   [self addUndoButton];
   [self addRepositionButton];
   [self addPauseButton];
   [self addLevelLabel];
   [self addTimerLabel];
+  
+  if (self.level > 5)
+    [self startBgMusic];
   
   self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(self.size.width - MARGIN*2, self.size.height - MARGIN*5 - self.undoButton.size.height)];
   self.playground.position = CGPointMake(self.size.width/2, self.size.height/2);
@@ -405,6 +426,8 @@
   }
   [self.directionHistory addObject:[NSNumber numberWithLong:self.direction]];
   
+  
+  [self.runPlayer play];
   [self.nathan runAction:runAction withKey:@"runAction"];
   SKAction *fadeIn = [SKAction fadeAlphaTo:1.0 duration:FADE_IN_DURATION];
   SKAction *moveAction = [SKAction moveTo:targetPoint duration:duration];
@@ -412,6 +435,10 @@
   SKAction *fadeOut = [SKAction fadeAlphaTo:0.0 duration:FADE_OUT_DURATION];
   SKAction *sequence = [SKAction sequence :@[leaveGroup, fadeOut]];
   [self.nathan runAction:sequence completion:^{
+    [self.runPlayer stop];
+    SKAction *door = [SKAction playSoundFileNamed:@"door-open.wav" waitForCompletion:NO];
+    [self.nathan runAction:door];
+    
     [self checkWin];
     SKTexture *currentHouse = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-c"]];
     [self changeTextureOfVertex:vertexName toTexture:currentHouse];
@@ -423,13 +450,19 @@
   NSString *lastVertexName = [self.visitedVertices lastObject];
   if (lastVertexName == [self.visitedVertices firstObject]) {
     [self emitFlashWithMessage:@"no moves to undo"];
+    [self playErrorSound];
     return;
   }
   if ([self nathanIsMoving]) {
     [self emitFlashWithMessage:@"thief must not move"];
+    [self playErrorSound];
     return;
   }
   
+  SKAction *undoSound = [SKAction playSoundFileNamed:@"undo-move.wav" waitForCompletion:NO];
+  [self.nathan runAction:undoSound];
+  [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)UNDO_PENALTY]];
+
   
   self.startTime -= UNDO_PENALTY;
   
@@ -466,7 +499,6 @@
   SKAction *fadeOut = [SKAction fadeAlphaTo:0.0 duration:FADE_OUT_DURATION];
   SKAction *sequence = [SKAction sequence :@[leaveGroup, fadeOut]];
   [self.nathan runAction:sequence completion:^{
-    [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)UNDO_PENALTY]];
 
     self.nathan.position = newVertex.position;
   }];
@@ -483,8 +515,10 @@
 - (void)repositionVertices {
   if ([self nathanIsMoving]) {
     [self emitFlashWithMessage:@"thief must not move"];
+    [self playErrorSound];
     return;
   }
+  [self playButtonSound];
   
   self.startTime -= REDRAW_PENALTY;
   [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)REDRAW_PENALTY]];
@@ -507,12 +541,15 @@
       touchPoint = [touch locationInNode:self.pauseBg];
       if ([self.instructionsButton containsPoint:touchPoint]) {
         [self viewInstructions];
+        [self playButtonSound];
         return;
       } else if ([self.backButton containsPoint:touchPoint]) {
         [self resumeGame];
+        [self playButtonSound];
         return;
       } else if ([self.quitButton containsPoint:touchPoint]) {
         [self backToIntro];
+        [self playButtonSound];
         return;
       }
     
@@ -520,6 +557,7 @@
       touchPoint = [touch locationInNode:self];
       if ([self.undoButton containsPoint:touchPoint]) {
         [self undoMove];
+
         return;
       } else if ([self.repositionButton containsPoint:touchPoint]) {
         [self repositionVertices];
@@ -544,12 +582,15 @@
               break;
               
             } else {
-              if (vertexName == self.visitedVertices[0])
+              [self playErrorSound];
+              if (vertexName == self.visitedVertices[0]) {
                 [self emitFlashWithMessage:@"rob all houses first"];
-              else
+              } else {
                 [self emitFlashWithMessage:@"already visited"];
+              }
             }
           } else {
+            [self playErrorSound];
             if (currentVertex == vertex)
               [self emitFlashWithMessage:@"rob another house"];
             else
@@ -564,11 +605,12 @@
 }
 
 #define SCENE_TRANSITION_DURATION 1.0
-#define BONUS_FACTOR 0.75
+#define BONUS_FACTOR 0.5
 
 - (void)checkWin {
   if ([self.visitedVertices count] == [self.vertices count] + 1) {
     self.inGame = NO;
+    [self doVolumeFade];
     WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
     wonScene.nextLevel = self.level + 1;
     wonScene.bonusSeconds = self.timeLeft*BONUS_FACTOR;
@@ -581,10 +623,12 @@
   self.inGame = NO;
   LostScene *lostScene = [[LostScene alloc] initWithSize:self.size];
   lostScene.level = self.level;
+  [self doVolumeFade];
   [self.view presentScene:lostScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
 }
 
 - (void)pauseGame {
+  [self playButtonSound];
   self.inGame = NO;
   self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"transition-screen%@", self.deviceSuffix]];
   self.pauseBg.zPosition = 10;
@@ -658,6 +702,8 @@
 
 - (void)swipeRightInstruction:(UISwipeGestureRecognizer *)sender
 {
+  
+
 
   self.instructionNumber--;
   if (self.instructionNumber <= 0) {
@@ -831,6 +877,7 @@
 }
 
 - (void)backToIntro {
+  [self doVolumeFade];
   IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
   [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
 }
@@ -842,5 +889,28 @@
     return [NSString stringWithFormat:@"%@%@", house, @"-small"];
 }
 
+- (void)doVolumeFade
+{
+  if (self.player.volume > 0.1) {
+    self.player.volume = self.player.volume - 0.1;
+    [self performSelector:@selector(doVolumeFade) withObject:nil afterDelay:0.1];
+  } else {
+    // Stop and get the sound ready for playing again
+    [self.player stop];
+    self.player.currentTime = 0;
+    [self.player prepareToPlay];
+    self.player.volume = 1.0;
+  }
+}
+
+- (void)playButtonSound {
+  SKAction *buttonSound = [SKAction playSoundFileNamed:@"button-click.wav" waitForCompletion:NO];
+  [self runAction:buttonSound];
+}
+
+- (void)playErrorSound {
+  SKAction *errorSound = [SKAction playSoundFileNamed:@"error.wav" waitForCompletion:NO];
+  [self runAction:errorSound];
+}
 
 @end

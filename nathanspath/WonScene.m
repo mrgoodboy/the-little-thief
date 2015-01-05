@@ -102,6 +102,8 @@
 }
 
 - (void)normalLvlUp {
+  SKAction *winSound = [SKAction playSoundFileNamed:@"win1.wav" waitForCompletion:NO];
+  
   SKSpriteNode *bg = [SKSpriteNode spriteNodeWithImageNamed:@"nathan-won"];
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
   bg.zPosition = -1;
@@ -117,7 +119,7 @@
   SKAction *moveIn1 = [SKAction moveTo:CGPointMake(self.size.width/2, self.size.height*2/3) duration:0.3];
   SKAction *wait2 = [SKAction waitForDuration:1.5];
   SKAction *moveOut = [SKAction moveTo:CGPointMake(self.size.width * 2, self.size.height*2/3) duration:0.3];
-  SKAction *seq1 = [SKAction sequence:@[wait1, moveIn1, wait2, moveOut]];
+  SKAction *seq1 = [SKAction sequence:@[wait1, winSound, moveIn1, wait2, moveOut]];
   [playAgainText runAction:seq1 completion:^{
     playAgainText.position = CGPointMake(-self.size.width, self.size.height*2/3);
     playAgainText.text = [NSString stringWithFormat:@"Tap to play level %ld", (long)self.nextLevel];
@@ -129,6 +131,7 @@
 }
 
 - (void)unlockTown {
+  SKAction *unlockSound = [SKAction playSoundFileNamed:@"win2.wav" waitForCompletion:NO];
   NSArray *towns = @[@"Greentown", @"Bluetown", @"Yellowtown", @"Greytown", @"Orangetown", @"Redtown"];
   NSString *nextTown = [towns objectAtIndex:(self.nextLevel-1)/5];
   
@@ -147,7 +150,7 @@
   SKAction *moveIn1 = [SKAction moveTo:CGPointMake(self.size.width/2, self.size.height*2/3) duration:0.3];
   SKAction *wait2 = [SKAction waitForDuration:2.0];
   SKAction *moveOut = [SKAction moveTo:CGPointMake(self.size.width * 2, self.size.height*2/3) duration:0.3];
-  SKAction *seq1 = [SKAction sequence:@[wait1, moveIn1, wait2, moveOut]];
+  SKAction *seq1 = [SKAction sequence:@[wait1, unlockSound, moveIn1, wait2, moveOut]];
   [playAgainText runAction:seq1 completion:^{
     playAgainText.position = CGPointMake(-self.size.width, self.size.height*2/3);
     playAgainText.text = [NSString stringWithFormat:@"Tap to rob houses in %@", nextTown];

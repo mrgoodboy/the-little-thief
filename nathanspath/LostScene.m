@@ -26,7 +26,8 @@
     highScore = self.level - 1;
   }
     
-  
+  SKAction *gameOverSound = [SKAction playSoundFileNamed:@"game-over.wav" waitForCompletion:NO];
+  [self runAction:gameOverSound];
   
   SKLabelNode *playAgainText = [[SKLabelNode alloc] initWithFontNamed:@"SueEllenFrancisco"];
   playAgainText.fontSize = 40.0;

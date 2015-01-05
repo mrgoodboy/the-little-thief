@@ -7,12 +7,12 @@
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "next-map@2x.png"
+      "filename" : "next-town@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "next-map@3x.png"
+      "filename" : "next-town@3x.png"
     }
   ],
   "info" : {
