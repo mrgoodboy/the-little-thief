@@ -129,6 +129,12 @@
   self.inGame = YES;
 }
 
+- (void)willMoveFromView:(SKView *)view {
+  [self doVolumeFade];
+  [self.view removeGestureRecognizer:self.swipeLeftGestureRecognizer];
+  [self.view removeGestureRecognizer:self.swipeRightGestureRecognizer];
+}
+
 - (void)startBgMusic {
   NSString *path = [NSString stringWithFormat:@"%@/bg-music.mp3", [[NSBundle mainBundle] resourcePath]];
   self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
@@ -876,6 +882,7 @@
 
 - (void)doVolumeFade
 {
+  [self.runPlayer stop];
   if (self.player.volume > 0.1) {
     self.player.volume = self.player.volume - 0.1;
     [self performSelector:@selector(doVolumeFade) withObject:nil afterDelay:0.1];
@@ -897,5 +904,7 @@
   SKAction *errorSound = [SKAction playSoundFileNamed:@"error.wav" waitForCompletion:NO];
   [self runAction:errorSound];
 }
+
+
 
 @end

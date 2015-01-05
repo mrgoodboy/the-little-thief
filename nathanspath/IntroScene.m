@@ -65,6 +65,11 @@
   }
 }
 
+- (void)willMoveFromView:(SKView *)view {
+  [self doVolumeFade];
+  [self.view removeGestureRecognizer:self.gestureRecognizer];
+}
+
 #pragma mark Setup
 
 - (void)startBgMusic {
