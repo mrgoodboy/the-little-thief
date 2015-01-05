@@ -9,6 +9,7 @@
 #import "IntroScene.h"
 #import "GameScene.h"
 #import "AVFoundation/AVFoundation.h"
+#import "LittleThiefConfig.h"
 
 @interface IntroScene ()
 @property (nonatomic, strong) SKSpriteNode *bg;
@@ -25,14 +26,6 @@
 @end
 @implementation IntroScene
 
-- (void)startBgMusic {
-  NSString *path = [NSString stringWithFormat:@"%@/intro-music.wav", [[NSBundle mainBundle] resourcePath]];
-  NSLog(@"%@", path);
-  self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
-  self.player.numberOfLoops = -1;
-  [self.player prepareToPlay];
-  [self.player play];
-}
 
 - (void)didMoveToView:(SKView *)view {
   
@@ -44,6 +37,7 @@
     self.gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
     self.gestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:self.gestureRecognizer];
+    
     [self startBgMusic];
     
   }
@@ -51,6 +45,7 @@
   {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
     self.backgroundColor = [SKColor blackColor];
     SKLabelNode *instrLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     instrLabel.fontSize = 42.0;
@@ -67,9 +62,17 @@
     [instrLabel runAction:sequence completion:^{
       [self viewInstructions];
     }];
-    
-    
   }
+}
+
+#pragma mark Setup
+
+- (void)startBgMusic {
+  NSString *path = [NSString stringWithFormat:@"%@/intro-music.wav", [[NSBundle mainBundle] resourcePath]];
+  self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+  self.player.numberOfLoops = -1;
+  [self.player prepareToPlay];
+  [self.player play];
   
 }
 
@@ -125,13 +128,13 @@
   
   self.instructions = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Light"];
   self.instructions.text = @"?";
-  self.instructions.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+  self.instructions.fontColor = [LittleThiefConfig yellow];
   self.instructions.position = CGPointMake(self.size.width-30, 20);
   self.instructions.fontSize = 50.0;
   [self addChild:self.instructions];
   
   self.townLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
-  self.townLabel.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+  self.townLabel.fontColor = [LittleThiefConfig yellow];
   self.townLabel.fontSize = 32;
   self.townLabel.position = CGPointMake(self.arrow.position.x - self.arrow.size.width/2 - 10, self.arrow.position.y - self.arrow.size.height);
   self.townLabel.text = [self.towns objectAtIndex:self.selectedTownIndex];
@@ -159,6 +162,8 @@
   gameScene.onlyInstructions = YES;
   [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.0]];
 }
+
+#pragma mark Interactions
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   for (UITouch *touch in touches) {
@@ -226,10 +231,7 @@
   }
 }
 
-- (void)update:(NSTimeInterval)currentTime {
-  
-  
-}
+#pragma mark Helpers
 
 -(void)doVolumeFade
 {

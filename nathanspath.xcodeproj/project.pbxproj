@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AB4508B01A57661800A9FFFF /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = AB4508AF1A57661800A9FFFF /* spark.png */; };
+		AB4828FE1A5ABC77007F3BF8 /* LittleThiefConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */; };
 		AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */; };
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
 		ABB169D31A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
@@ -52,6 +53,8 @@
 
 /* Begin PBXFileReference section */
 		AB4508AF1A57661800A9FFFF /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		AB4828FC1A5ABC77007F3BF8 /* LittleThiefConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LittleThiefConfig.h; sourceTree = "<group>"; };
+		AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LittleThiefConfig.m; sourceTree = "<group>"; };
 		AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LostScene.h; sourceTree = "<group>"; };
 		AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LostScene.m; sourceTree = "<group>"; };
 		ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SueEllenFrancisco.ttf; sourceTree = "<group>"; };
@@ -175,11 +178,11 @@
 				ABB169E01A4F6A32004A90D6 /* atlases */,
 				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
 				ABEC7A671A49BF770065E993 /* AppDelegate.m */,
+				ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */,
+				ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */,
 				ABEC7A6C1A49BF770065E993 /* GameScene.sks */,
 				ABEC7A691A49BF770065E993 /* GameScene.h */,
 				ABEC7A6A1A49BF770065E993 /* GameScene.m */,
-				ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */,
-				ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */,
 				ABF61CDA1A4C2658002CBFEE /* WonScene.h */,
 				ABF61CDB1A4C2658002CBFEE /* WonScene.m */,
 				AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */,
@@ -188,9 +191,11 @@
 				ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */,
 				ABEC7A6E1A49BF770065E993 /* GameViewController.h */,
 				ABEC7A6F1A49BF770065E993 /* GameViewController.m */,
-				ABEC7A711A49BF770065E993 /* Main.storyboard */,
+				AB4828FC1A5ABC77007F3BF8 /* LittleThiefConfig.h */,
+				AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */,
 				ABEC7A741A49BF770065E993 /* Images.xcassets */,
 				ABEC7A761A49BF770065E993 /* LaunchScreen.xib */,
+				ABEC7A711A49BF770065E993 /* Main.storyboard */,
 				ABEC7A621A49BF770065E993 /* Supporting Files */,
 			);
 			name = thelittlethief;
@@ -349,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABF6077B1A49E49B00EE9EA8 /* NathanSpriteNode.m in Sources */,
+				AB4828FE1A5ABC77007F3BF8 /* LittleThiefConfig.m in Sources */,
 				ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */,
 				ABF61CDC1A4C2658002CBFEE /* WonScene.m in Sources */,
 				ABEC7A701A49BF770065E993 /* GameViewController.m in Sources */,
@@ -477,9 +483,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = nathanspath/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = nathanspath;
 				PROVISIONING_PROFILE = "";
@@ -490,9 +498,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = nathanspath/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = nathanspath;
 				PROVISIONING_PROFILE = "";

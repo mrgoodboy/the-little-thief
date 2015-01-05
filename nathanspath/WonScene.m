@@ -9,6 +9,7 @@
 #import "WonScene.h"
 #import "GameScene.h"
 #import "IntroScene.h"
+#import "LittleThiefConfig.h"
 @interface WonScene()
 @property BOOL limitReached;
 
@@ -23,8 +24,9 @@
     if (!highScore || self.nextLevel - 1 > highScore) {
       [[NSUserDefaults standardUserDefaults] setInteger:self.nextLevel forKey:@"HighScore"];
       highScore = self.nextLevel - 1;
+      [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     return;
   }
   if ((self.nextLevel - 1) % 5 == 0) {
@@ -45,10 +47,10 @@
       self.limitReached = YES;
   }
   if (self.limitReached) {
-    self.backgroundColor = [SKColor colorWithRed:54.0/255.0 green:54.0/255.0 blue:127.0/255.0 alpha:0.95];
+    self.backgroundColor = [LittleThiefConfig darkBlue];
     SKLabelNode *congr = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     congr.fontSize = 50;
-    congr.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    congr.fontColor = [LittleThiefConfig yellow];
     congr.text = @"Congratulations Boss!";
     congr.position = CGPointMake(self.size.width/2, self.size.height*8/9);
     [self addChild:congr];
@@ -56,42 +58,42 @@
     
     SKLabelNode *body1 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     body1.fontSize = 30;
-    body1.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    body1.fontColor = [LittleThiefConfig yellow];
     body1.text = @"You finished all available levels.";
     body1.position = CGPointMake(self.size.width/2, self.size.height*7/9);
     [self addChild:body1];
     
     SKLabelNode *review1 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     review1.fontSize = 30;
-    review1.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    review1.fontColor = [LittleThiefConfig yellow];
     review1.text = @"If you liked The Little Thief,";
     review1.position = CGPointMake(self.size.width/2, self.size.height*5/9);
     [self addChild:review1];
     
     SKLabelNode *review2 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     review2.fontSize = 30;
-    review2.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    review2.fontColor = [LittleThiefConfig yellow];
     review2.text = @"please consider rating or reviewing";
     review2.position = CGPointMake(self.size.width/2, self.size.height*4/9);
     [self addChild:review2];
     
     SKLabelNode *review0 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     review0.fontSize = 30;
-    review0.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    review0.fontColor = [LittleThiefConfig yellow];
     review0.text = @"my game on the App Store.";
     review0.position = CGPointMake(self.size.width/2, self.size.height*3/9);
     [self addChild:review0];
     
     SKLabelNode *body2 = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     body2.fontSize = 30;
-    body2.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    body2.fontColor = [LittleThiefConfig yellow];
     body2.text = @"Stay tuned for the next update!";
     body2.position = CGPointMake(self.size.width/2, self.size.height*2/9);
     [self addChild:body2];
     
     SKLabelNode *sign = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     sign.fontSize = 30;
-    sign.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+    sign.fontColor = [LittleThiefConfig yellow];
     sign.text = @"Minh Tri Pham";
     sign.position = CGPointMake(self.size.width/2, self.size.height*1/9);
     [self addChild:sign];
@@ -112,7 +114,7 @@
   SKLabelNode *playAgainText = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   playAgainText.fontSize = 40.0;
   playAgainText.text = [NSString stringWithFormat:@"Nice! +%ld seconds", (long)self.bonusSeconds];
-  playAgainText.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+  playAgainText.fontColor = [LittleThiefConfig yellow];
   playAgainText.position = CGPointMake(-self.size.width, self.size.height*2/3);
   [self addChild:playAgainText];
   SKAction *wait1 = [SKAction waitForDuration:0.1];
@@ -143,7 +145,7 @@
   SKLabelNode *playAgainText = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   playAgainText.fontSize = 32.0;
   playAgainText.text = [NSString stringWithFormat:@"Yay, you unlocked a new town"];
-  playAgainText.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+  playAgainText.fontColor = [LittleThiefConfig yellow];
   playAgainText.position = CGPointMake(-self.size.width, self.size.height*2/3);
   [self addChild:playAgainText];
   SKAction *wait1 = [SKAction waitForDuration:0.1];

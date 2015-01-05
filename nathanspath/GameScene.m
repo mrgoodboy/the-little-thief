@@ -12,6 +12,7 @@
 #import "IntroScene.h"
 #import "NathanSpriteNode.h"
 #include "stdlib.h"
+#import "LittleThiefConfig.h"
 
 #import "AVFoundation/AVFoundation.h"
 
@@ -94,19 +95,6 @@
 
 #define MARGIN 20.0
 
-//also sets up running
-- (void)startBgMusic {
-  NSString *path = [NSString stringWithFormat:@"%@/bg-music.mp3", [[NSBundle mainBundle] resourcePath]];
-  self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
-  self.player.numberOfLoops = -1;
-  [self.player prepareToPlay];
-  [self.player play];
-  
-  NSString *runPath = [NSString stringWithFormat:@"%@/running.wav", [[NSBundle mainBundle] resourcePath]];
-  self.runPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:runPath] error:nil];
-  self.runPlayer.numberOfLoops = -1;
-}
-
 - (void)didMoveToView:(SKView *)view {
   [self mySetDeviceSuffix];
   
@@ -115,8 +103,6 @@
     [self viewInstructions];
     return;
   }
-  
-  
   
   [self setBackground];
   [self addUndoButton];
@@ -127,6 +113,7 @@
   
   if (self.level > 5)
     [self startBgMusic];
+  [self startRunningMusic];
   
   self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(self.size.width - MARGIN*2, self.size.height - MARGIN*5 - self.undoButton.size.height)];
   self.playground.position = CGPointMake(self.size.width/2, self.size.height/2);
@@ -141,6 +128,23 @@
   self.instructionNumber = 0;
   self.inGame = YES;
 }
+
+- (void)startBgMusic {
+  NSString *path = [NSString stringWithFormat:@"%@/bg-music.mp3", [[NSBundle mainBundle] resourcePath]];
+  self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+  self.player.numberOfLoops = -1;
+  [self.player prepareToPlay];
+  [self.player play];
+}
+
+- (void)startRunningMusic {
+  NSString *runPath = [NSString stringWithFormat:@"%@/running.wav", [[NSBundle mainBundle] resourcePath]];
+  self.runPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:runPath] error:nil];
+  [self.runPlayer prepareToPlay];
+  self.runPlayer.numberOfLoops = -1;
+}
+
+
 - (void)addLevelLabel {
   SKLabelNode *levelLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   levelLabel.fontSize = 42.0;
@@ -233,7 +237,6 @@
     self.deviceSuffix = @"";
     self.sizeChangeLevel = 15;
   }
-  
 }
 
 #pragma mark Graph Creation
@@ -259,7 +262,6 @@
   NSInteger cols = self.playground.size.width/(houseSize+HOUSE_MARGIN_SIZE);
   NSInteger rows = self.playground.size.height/(houseSize+HOUSE_MARGIN_SIZE);
   NSInteger squares = cols * rows;
-  NSLog(@"%lu", (long)squares);
   NSMutableArray *takenSquares= [[NSMutableArray alloc] initWithCapacity:squares];
   for (int i = 0; i < squares; i++) {
     takenSquares[i] = [NSNumber numberWithBool:NO];
@@ -366,13 +368,11 @@
   for (NSString *vertexName in self.edges) {
     
     SKSpriteNode *vertex = [self vertexWithName:vertexName];
-    //    CGPoint originPoint = [self convertPoint:vertex.position fromNode:self.playground];
     CGPoint originPoint = vertex.position;
     for (NSString *adjacentName in [self.edges objectForKey:vertexName]) {
       if ([added objectForKey:adjacentName] && [[added objectForKey:adjacentName] containsObject:vertexName])
         continue;
       SKSpriteNode *adjacent = [self vertexWithName:adjacentName];
-      //      CGPoint destinationPoint = [self convertPoint:adjacent.position fromNode:self.playground];
       CGPoint destinationPoint = adjacent.position;
       SKShapeNode *edge = [SKShapeNode node];
       edge.name = @"edge";
@@ -715,11 +715,7 @@
   
 }
 
-- (void)swipeRightInstruction:(UISwipeGestureRecognizer *)sender
-{
-  
-
-
+- (void)swipeRightInstruction:(UISwipeGestureRecognizer *)sender {
   self.instructionNumber--;
   if (self.instructionNumber <= 0) {
     [self.view removeGestureRecognizer:self.swipeRightGestureRecognizer];
@@ -744,8 +740,7 @@
   self.instructionsBg.texture = texture;
 }
 
-- (void)swipeLeftInstruction:(UISwipeGestureRecognizer *)sender
-{
+- (void)swipeLeftInstruction:(UISwipeGestureRecognizer *)sender {
   
   self.instructionNumber++;
   if (self.instructionNumber >= 13) {
@@ -768,7 +763,6 @@
 }
 
 #define GAME_DURATION 41
-//#define GAME_DURATION 10000
 
 - (void)update:(CFTimeInterval)currentTime {
   if (!self.startTime) {
@@ -850,8 +844,6 @@
       return @[[self.runningNathanAtlas textureNamed:@"down1"], [self.runningNathanAtlas textureNamed:@"down2"]];
     }
   }
-  
-  
 }
 
 - (void)emitFlashWithMessage:(NSString *)message {
@@ -862,7 +854,7 @@
   SKLabelNode *messageLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   messageLabel.fontSize = 40;
   messageLabel.zPosition = 20;
-  messageLabel.fontColor = [SKColor colorWithRed:255.0/255.0 green:241.0/255.0 blue:1.0/255.0 alpha:1.0];
+  messageLabel.fontColor = [LittleThiefConfig yellow];
   messageLabel.position = CGPointMake(self.size.width/2, self.size.height/2);
   messageLabel.text = message;
   [self addChild:messageLabel];
