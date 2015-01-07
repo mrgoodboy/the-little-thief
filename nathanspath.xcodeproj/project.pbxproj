@@ -10,6 +10,7 @@
 		AB4508B01A57661800A9FFFF /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = AB4508AF1A57661800A9FFFF /* spark.png */; };
 		AB4647DA1A5D736900730E62 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB4647D91A5D736900730E62 /* GameKit.framework */; };
 		AB4647DF1A5DB69A00730E62 /* clock-ticking.wav in Resources */ = {isa = PBXBuildFile; fileRef = AB4647DE1A5DB69A00730E62 /* clock-ticking.wav */; };
+		AB4647E31A5DD8E100730E62 /* running.wav in Resources */ = {isa = PBXBuildFile; fileRef = AB4647E21A5DD8E100730E62 /* running.wav */; };
 		AB4828FE1A5ABC77007F3BF8 /* LittleThiefConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */; };
 		AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */; };
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
@@ -23,8 +24,6 @@
 		ABBDABB11A5A23AA00D127E6 /* door-open.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABA51A5A23AA00D127E6 /* door-open.wav */; };
 		ABBDABB21A5A23AA00D127E6 /* error.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABA61A5A23AA00D127E6 /* error.wav */; };
 		ABBDABB31A5A23AA00D127E6 /* game-over.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABA71A5A23AA00D127E6 /* game-over.wav */; };
-		ABBDABB41A5A23AA00D127E6 /* intro-music.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABA81A5A23AA00D127E6 /* intro-music.wav */; };
-		ABBDABB51A5A23AA00D127E6 /* running.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABA91A5A23AA00D127E6 /* running.wav */; };
 		ABBDABB61A5A23AA00D127E6 /* swoosh.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABAA1A5A23AA00D127E6 /* swoosh.wav */; };
 		ABBDABB71A5A23AA00D127E6 /* undo-move.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABAB1A5A23AA00D127E6 /* undo-move.wav */; };
 		ABBDABB81A5A23AA00D127E6 /* win1.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABAC1A5A23AA00D127E6 /* win1.wav */; };
@@ -57,6 +56,7 @@
 		AB4508AF1A57661800A9FFFF /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		AB4647D91A5D736900730E62 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		AB4647DE1A5DB69A00730E62 /* clock-ticking.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "clock-ticking.wav"; sourceTree = "<group>"; };
+		AB4647E21A5DD8E100730E62 /* running.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = running.wav; sourceTree = "<group>"; };
 		AB4828FC1A5ABC77007F3BF8 /* LittleThiefConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LittleThiefConfig.h; sourceTree = "<group>"; };
 		AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LittleThiefConfig.m; sourceTree = "<group>"; };
 		AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LostScene.h; sourceTree = "<group>"; };
@@ -70,8 +70,6 @@
 		ABBDABA51A5A23AA00D127E6 /* door-open.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "door-open.wav"; sourceTree = "<group>"; };
 		ABBDABA61A5A23AA00D127E6 /* error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = error.wav; sourceTree = "<group>"; };
 		ABBDABA71A5A23AA00D127E6 /* game-over.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "game-over.wav"; sourceTree = "<group>"; };
-		ABBDABA81A5A23AA00D127E6 /* intro-music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "intro-music.wav"; sourceTree = "<group>"; };
-		ABBDABA91A5A23AA00D127E6 /* running.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = running.wav; sourceTree = "<group>"; };
 		ABBDABAA1A5A23AA00D127E6 /* swoosh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swoosh.wav; sourceTree = "<group>"; };
 		ABBDABAB1A5A23AA00D127E6 /* undo-move.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "undo-move.wav"; sourceTree = "<group>"; };
 		ABBDABAC1A5A23AA00D127E6 /* win1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win1.wav; sourceTree = "<group>"; };
@@ -147,8 +145,7 @@
 				ABBDABA51A5A23AA00D127E6 /* door-open.wav */,
 				ABBDABA61A5A23AA00D127E6 /* error.wav */,
 				ABBDABA71A5A23AA00D127E6 /* game-over.wav */,
-				ABBDABA81A5A23AA00D127E6 /* intro-music.wav */,
-				ABBDABA91A5A23AA00D127E6 /* running.wav */,
+				AB4647E21A5DD8E100730E62 /* running.wav */,
 				ABBDABAA1A5A23AA00D127E6 /* swoosh.wav */,
 				ABBDABAB1A5A23AA00D127E6 /* undo-move.wav */,
 				ABBDABAC1A5A23AA00D127E6 /* win1.wav */,
@@ -325,19 +322,18 @@
 				ABEC7A781A49BF770065E993 /* LaunchScreen.xib in Resources */,
 				ABBDABB11A5A23AA00D127E6 /* door-open.wav in Resources */,
 				ABBDABAE1A5A23AA00D127E6 /* bg-music.mp3 in Resources */,
-				ABBDABB51A5A23AA00D127E6 /* running.wav in Resources */,
 				ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */,
 				ABEC7A751A49BF770065E993 /* Images.xcassets in Resources */,
 				ABBDABB01A5A23AA00D127E6 /* change-slide.wav in Resources */,
 				ABBDABAF1A5A23AA00D127E6 /* button-click.wav in Resources */,
 				ABBDABB71A5A23AA00D127E6 /* undo-move.wav in Resources */,
-				ABBDABB41A5A23AA00D127E6 /* intro-music.wav in Resources */,
 				ABBDABB91A5A23AA00D127E6 /* win2.wav in Resources */,
 				ABBDABB61A5A23AA00D127E6 /* swoosh.wav in Resources */,
 				AB4508B01A57661800A9FFFF /* spark.png in Resources */,
 				ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */,
 				ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */,
 				AB4647DF1A5DB69A00730E62 /* clock-ticking.wav in Resources */,
+				AB4647E31A5DD8E100730E62 /* running.wav in Resources */,
 				ABBDABB31A5A23AA00D127E6 /* game-over.wav in Resources */,
 				ABBDABB81A5A23AA00D127E6 /* win1.wav in Resources */,
 				ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */,

@@ -791,8 +791,10 @@
     int countDownInt = (int)(currentTime - self.startTime);
     if (countDownInt < gameDuration) {
       self.timeLeft = gameDuration - countDownInt;
-      if (self.timeLeft <= 10 && self.clockPlayer.isPlaying == NO)
+      if (self.timeLeft <= 10 && self.clockPlayer.isPlaying == NO) {
         [self.clockPlayer play];
+        self.timerLabel.fontColor = [LittleThiefConfig red];
+      }
       self.timerLabel.text = [NSString stringWithFormat:@"%ld", (long)self.timeLeft];
       self.bonusSeconds = self.timeLeft;
     } else {
