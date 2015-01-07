@@ -51,6 +51,7 @@
 
 @property (nonatomic, strong) AVAudioPlayer *player; //bg music
 @property (nonatomic, strong) AVAudioPlayer *runPlayer;
+@property (nonatomic, strong) AVAudioPlayer *clockPlayer;
 
 //game config
 @property NSInteger sizeChangeLevel; //level for size change
@@ -111,9 +112,11 @@
   [self addLevelLabel];
   [self addTimerLabel];
   
+  
   if (self.level > 5)
     [self startBgMusic];
-  [self startRunningMusic];
+  [self prepareRunningMusic];
+  [self prepareClockTicker];
   
   self.playground = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(self.size.width - MARGIN*2, self.size.height - MARGIN*5 - self.undoButton.size.height)];
   self.playground.position = CGPointMake(self.size.width/2, self.size.height/2);
@@ -143,11 +146,17 @@
   [self.player play];
 }
 
-- (void)startRunningMusic {
+- (void)prepareRunningMusic {
   NSString *runPath = [NSString stringWithFormat:@"%@/running.wav", [[NSBundle mainBundle] resourcePath]];
   self.runPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:runPath] error:nil];
   [self.runPlayer prepareToPlay];
   self.runPlayer.numberOfLoops = -1;
+}
+
+- (void)prepareClockTicker {
+  NSString *path = [NSString stringWithFormat:@"%@/clock-ticking.wav", [[NSBundle mainBundle] resourcePath]];
+  self.clockPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+  [self.clockPlayer prepareToPlay];
 }
 
 
@@ -782,6 +791,8 @@
     int countDownInt = (int)(currentTime - self.startTime);
     if (countDownInt < gameDuration) {
       self.timeLeft = gameDuration - countDownInt;
+      if (self.timeLeft <= 10 && self.clockPlayer.isPlaying == NO)
+        [self.clockPlayer play];
       self.timerLabel.text = [NSString stringWithFormat:@"%ld", (long)self.timeLeft];
       self.bonusSeconds = self.timeLeft;
     } else {
@@ -883,6 +894,7 @@
 - (void)doVolumeFade
 {
   [self.runPlayer stop];
+  [self.clockPlayer stop];
   if (self.player.volume > 0.1) {
     self.player.volume = self.player.volume - 0.1;
     [self performSelector:@selector(doVolumeFade) withObject:nil afterDelay:0.1];

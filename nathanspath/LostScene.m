@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) SKLabelNode *leaderboardLabel;
 @property (nonatomic, strong) NSString *leaderboardIdentifier;
+
+@property (nonatomic, strong) SKNode *levelReached; //big label
 @property (nonatomic, strong) SKLabelNode *aLabel;
 @property (nonatomic, strong) SKLabelNode *bLabel;
 @property BOOL doneTextActions;
@@ -70,7 +72,7 @@
   SKAction *fadeOut = [SKAction fadeOutWithDuration:0.3];
   SKAction *seq1 = [SKAction sequence:@[wait, fadeOut]];
   [playAgainText runAction:seq1 completion:^{
-    SKNode *levelReached = [SKNode node];
+    self.levelReached = [SKNode node];
     self.aLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     self.aLabel.fontSize = 40.0;
     self.aLabel.fontColor = [LittleThiefConfig yellow];
@@ -82,12 +84,12 @@
     self.bLabel.position = CGPointMake(self.bLabel.position.x, self.bLabel.position.y - self.aLabel.frame.size.height - 50);
     self.aLabel.text = st1;
     self.bLabel.text = st2;
-    [levelReached addChild:self.aLabel];
-    [levelReached addChild:self.bLabel];
-    levelReached.position = CGPointMake(self.size.width/2, self.size.height*3/4);
-    levelReached.alpha = 0;
-    [self addChild:levelReached];
-    [levelReached runAction:[SKAction fadeInWithDuration:0.3] completion:^{
+    [self.levelReached addChild:self.aLabel];
+    [self.levelReached addChild:self.bLabel];
+    self.levelReached.position = CGPointMake(self.size.width/2, self.size.height*3/4);
+    self.levelReached.alpha = 0;
+    [self addChild:self.levelReached];
+    [self.levelReached runAction:[SKAction fadeInWithDuration:0.3] completion:^{
       self.doneTextActions = YES;
     }];
     
@@ -140,15 +142,14 @@
 }
 
 - (void)displayLoginPrompt {
-  [self.aLabel runAction:[SKAction fadeOutWithDuration:0.2]];
-  [self.bLabel runAction:[SKAction fadeOutWithDuration:0.2] completion:^{
+
+  [self.levelReached runAction:[SKAction fadeOutWithDuration:0.3] completion:^{
     self.aLabel.text = @"login to Game Center";
     self.bLabel.text = @"to see the best";
     
     self.aLabel.fontSize = 40.0;
     self.bLabel.fontSize = 40.0;
-    self.aLabel.alpha = 1.0;
-    self.bLabel.alpha = 1.0;
+    [self.levelReached runAction:[SKAction fadeInWithDuration:0.1]];
     
   }];
 }

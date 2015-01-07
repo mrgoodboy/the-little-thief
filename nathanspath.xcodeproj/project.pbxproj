@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AB4508B01A57661800A9FFFF /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = AB4508AF1A57661800A9FFFF /* spark.png */; };
 		AB4647DA1A5D736900730E62 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB4647D91A5D736900730E62 /* GameKit.framework */; };
+		AB4647DF1A5DB69A00730E62 /* clock-ticking.wav in Resources */ = {isa = PBXBuildFile; fileRef = AB4647DE1A5DB69A00730E62 /* clock-ticking.wav */; };
 		AB4828FE1A5ABC77007F3BF8 /* LittleThiefConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */; };
 		AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */; };
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
@@ -55,6 +56,7 @@
 /* Begin PBXFileReference section */
 		AB4508AF1A57661800A9FFFF /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		AB4647D91A5D736900730E62 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		AB4647DE1A5DB69A00730E62 /* clock-ticking.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "clock-ticking.wav"; sourceTree = "<group>"; };
 		AB4828FC1A5ABC77007F3BF8 /* LittleThiefConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LittleThiefConfig.h; sourceTree = "<group>"; };
 		AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LittleThiefConfig.m; sourceTree = "<group>"; };
 		AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LostScene.h; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 		ABBDAB6B1A59F6FD00D127E6 /* sounds */ = {
 			isa = PBXGroup;
 			children = (
+				AB4647DE1A5DB69A00730E62 /* clock-ticking.wav */,
 				ABBDABA21A5A23AA00D127E6 /* bg-music.mp3 */,
 				ABBDABA31A5A23AA00D127E6 /* button-click.wav */,
 				ABBDABA41A5A23AA00D127E6 /* change-slide.wav */,
@@ -334,6 +337,7 @@
 				AB4508B01A57661800A9FFFF /* spark.png in Resources */,
 				ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */,
 				ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */,
+				AB4647DF1A5DB69A00730E62 /* clock-ticking.wav in Resources */,
 				ABBDABB31A5A23AA00D127E6 /* game-over.wav in Resources */,
 				ABBDABB81A5A23AA00D127E6 /* win1.wav in Resources */,
 				ABB169E21A4F6FAF004A90D6 /* runningNathan.atlas in Resources */,
