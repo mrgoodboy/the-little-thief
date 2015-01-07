@@ -93,7 +93,7 @@
 
 #pragma mark Setup
 
-#define MARGIN 20.0
+
 
 - (void)didMoveToView:(SKView *)view {
   [self mySetDeviceSuffix];
@@ -768,7 +768,7 @@
   
 }
 
-#define GAME_DURATION 41
+
 
 - (void)update:(CFTimeInterval)currentTime {
   if (!self.startTime) {

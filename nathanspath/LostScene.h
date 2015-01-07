@@ -7,7 +7,8 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import <GameKit/GameKit.h>
 
-@interface LostScene : SKScene
+@interface LostScene : SKScene <GKGameCenterControllerDelegate>
 @property NSInteger level;
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AB4508B01A57661800A9FFFF /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = AB4508AF1A57661800A9FFFF /* spark.png */; };
+		AB4647DA1A5D736900730E62 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB4647D91A5D736900730E62 /* GameKit.framework */; };
 		AB4828FE1A5ABC77007F3BF8 /* LittleThiefConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */; };
 		AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */; };
 		ABB169D21A4F42D1004A90D6 /* SueEllenFrancisco.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABB169D11A4F42D1004A90D6 /* SueEllenFrancisco.ttf */; };
@@ -53,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		AB4508AF1A57661800A9FFFF /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		AB4647D91A5D736900730E62 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		AB4828FC1A5ABC77007F3BF8 /* LittleThiefConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LittleThiefConfig.h; sourceTree = "<group>"; };
 		AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LittleThiefConfig.m; sourceTree = "<group>"; };
 		AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LostScene.h; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB4647DA1A5D736900730E62 /* GameKit.framework in Frameworks */,
 				ABBDABA11A5A231E00D127E6 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,6 +157,7 @@
 		ABEC7A561A49BF770065E993 = {
 			isa = PBXGroup;
 			children = (
+				AB4647D91A5D736900730E62 /* GameKit.framework */,
 				ABBDABA01A5A231E00D127E6 /* AVFoundation.framework */,
 				ABEC7A611A49BF770065E993 /* thelittlethief */,
 				ABEC7A801A49BF770065E993 /* thelittlethieftests */,
@@ -281,7 +285,7 @@
 						DevelopmentTeam = XTKM9ER4YN;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};

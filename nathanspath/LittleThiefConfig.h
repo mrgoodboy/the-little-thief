@@ -11,10 +11,12 @@
 
 @interface LittleThiefConfig : NSObject
 
-
-
+#define MARGIN 20.0
+#define GAME_DURATION 41
+#define MIN_REPORT_SCORE 2
 
 + (SKColor *)yellow;
 + (SKColor *)darkBlue;
++ (SKColor *)red;
 
 @end
