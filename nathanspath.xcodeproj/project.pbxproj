@@ -32,13 +32,11 @@
 		ABEC7A651A49BF770065E993 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A641A49BF770065E993 /* main.m */; };
 		ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A671A49BF770065E993 /* AppDelegate.m */; };
 		ABEC7A6B1A49BF770065E993 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A6A1A49BF770065E993 /* GameScene.m */; };
-		ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = ABEC7A6C1A49BF770065E993 /* GameScene.sks */; };
 		ABEC7A701A49BF770065E993 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A6F1A49BF770065E993 /* GameViewController.m */; };
 		ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABEC7A711A49BF770065E993 /* Main.storyboard */; };
 		ABEC7A751A49BF770065E993 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABEC7A741A49BF770065E993 /* Images.xcassets */; };
 		ABEC7A781A49BF770065E993 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABEC7A761A49BF770065E993 /* LaunchScreen.xib */; };
 		ABEC7A841A49BF770065E993 /* nathanspathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A831A49BF770065E993 /* nathanspathTests.m */; };
-		ABF6077B1A49E49B00EE9EA8 /* NathanSpriteNode.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */; };
 		ABF61CDC1A4C2658002CBFEE /* WonScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF61CDB1A4C2658002CBFEE /* WonScene.m */; };
 /* End PBXBuildFile section */
 
@@ -83,7 +81,6 @@
 		ABEC7A671A49BF770065E993 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		ABEC7A691A49BF770065E993 /* GameScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
 		ABEC7A6A1A49BF770065E993 /* GameScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameScene.m; sourceTree = "<group>"; };
-		ABEC7A6C1A49BF770065E993 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		ABEC7A6E1A49BF770065E993 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
 		ABEC7A6F1A49BF770065E993 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 		ABEC7A721A49BF770065E993 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -92,8 +89,6 @@
 		ABEC7A7D1A49BF770065E993 /* nathanspathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nathanspathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABEC7A821A49BF770065E993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABEC7A831A49BF770065E993 /* nathanspathTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = nathanspathTests.m; sourceTree = "<group>"; };
-		ABF607791A49E49B00EE9EA8 /* NathanSpriteNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NathanSpriteNode.h; sourceTree = "<group>"; };
-		ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NathanSpriteNode.m; sourceTree = "<group>"; };
 		ABF61CDA1A4C2658002CBFEE /* WonScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonScene.h; sourceTree = "<group>"; };
 		ABF61CDB1A4C2658002CBFEE /* WonScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonScene.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -180,19 +175,14 @@
 				ABBDAB6B1A59F6FD00D127E6 /* sounds */,
 				ABB169D01A4F42BE004A90D6 /* fonts */,
 				ABB169E01A4F6A32004A90D6 /* atlases */,
-				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
-				ABEC7A671A49BF770065E993 /* AppDelegate.m */,
 				ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */,
 				ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */,
-				ABEC7A6C1A49BF770065E993 /* GameScene.sks */,
 				ABEC7A691A49BF770065E993 /* GameScene.h */,
 				ABEC7A6A1A49BF770065E993 /* GameScene.m */,
 				ABF61CDA1A4C2658002CBFEE /* WonScene.h */,
 				ABF61CDB1A4C2658002CBFEE /* WonScene.m */,
 				AB76E1CE1A4F76FF0030C9D3 /* LostScene.h */,
 				AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */,
-				ABF607791A49E49B00EE9EA8 /* NathanSpriteNode.h */,
-				ABF6077A1A49E49B00EE9EA8 /* NathanSpriteNode.m */,
 				ABEC7A6E1A49BF770065E993 /* GameViewController.h */,
 				ABEC7A6F1A49BF770065E993 /* GameViewController.m */,
 				AB4828FC1A5ABC77007F3BF8 /* LittleThiefConfig.h */,
@@ -209,6 +199,8 @@
 		ABEC7A621A49BF770065E993 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
+				ABEC7A671A49BF770065E993 /* AppDelegate.m */,
 				ABEC7A631A49BF770065E993 /* Info.plist */,
 				ABEC7A641A49BF770065E993 /* main.m */,
 			);
@@ -330,7 +322,6 @@
 				ABBDABB91A5A23AA00D127E6 /* win2.wav in Resources */,
 				ABBDABB61A5A23AA00D127E6 /* swoosh.wav in Resources */,
 				AB4508B01A57661800A9FFFF /* spark.png in Resources */,
-				ABEC7A6D1A49BF770065E993 /* GameScene.sks in Resources */,
 				ABEC7A731A49BF770065E993 /* Main.storyboard in Resources */,
 				AB4647DF1A5DB69A00730E62 /* clock-ticking.wav in Resources */,
 				AB4647E31A5DD8E100730E62 /* running.wav in Resources */,
@@ -357,7 +348,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABF6077B1A49E49B00EE9EA8 /* NathanSpriteNode.m in Sources */,
 				AB4828FE1A5ABC77007F3BF8 /* LittleThiefConfig.m in Sources */,
 				ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */,
 				ABF61CDC1A4C2658002CBFEE /* WonScene.m in Sources */,

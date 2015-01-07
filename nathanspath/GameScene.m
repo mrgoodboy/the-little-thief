@@ -10,7 +10,6 @@
 #import "WonScene.h"
 #import "LostScene.h"
 #import "IntroScene.h"
-#import "NathanSpriteNode.h"
 #include "stdlib.h"
 #import "LittleThiefConfig.h"
 
@@ -19,7 +18,7 @@
 @interface GameScene ()
 
 @property NSString *deviceSuffix; //for instructions
-@property (nonatomic, strong) NathanSpriteNode *nathan;
+@property (nonatomic, strong) SKSpriteNode *nathan;
 @property (nonatomic, strong) SKSpriteNode *playground;
 @property (nonatomic, strong) NSMutableArray *vertices; //names of vertices
 @property (nonatomic, strong) NSMutableDictionary *edges; //names of edges
@@ -186,7 +185,7 @@
 }
 
 - (void)addNathan {
-  self.nathan = [[NathanSpriteNode alloc] init];
+  self.nathan = [SKSpriteNode spriteNodeWithImageNamed:@"undo-button"];
   self.nathan.alpha = 0.0;
   [self.playground addChild:self.nathan];
 }
