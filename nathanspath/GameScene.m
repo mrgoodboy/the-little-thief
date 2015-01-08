@@ -217,9 +217,9 @@
 - (void)setBackground {
   SKSpriteNode *bg;
   if (self.level < 6) {
-    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
-  } else if (self.level < 11) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-blue"];
+  } else if (self.level < 11) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-purple"];
   } else if (self.level < 16) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-yellow"];
   } else if (self.level < 21) {

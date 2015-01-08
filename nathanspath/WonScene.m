@@ -10,15 +10,19 @@
 #import "GameScene.h"
 #import "IntroScene.h"
 #import "LittleThiefConfig.h"
+#import "FBHelper.h"
 @interface WonScene()
 @property BOOL limitReached;
-
+@property BOOL fbIn;
+@property (nonatomic, strong) SKSpriteNode *fbShareNode;
 @end
 
 @implementation WonScene
 
 
+
 - (void)didMoveToView:(SKView *)view {
+  self.fbIn = YES; //block only when unlock
   if ([self checkLimits]) {
     NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
     if (!highScore || self.nextLevel - 1 > highScore) {
@@ -133,18 +137,25 @@
 }
 
 - (void)unlockTown {
+  self.fbIn = NO;
   SKAction *unlockSound = [SKAction playSoundFileNamed:@"win2.wav" waitForCompletion:NO];
-  NSArray *towns = @[@"Greentown", @"Bluetown", @"Yellowtown", @"Greytown", @"Orangetown", @"Redtown"];
+  NSArray *towns = [LittleThiefConfig getEpisodes];
   NSString *nextTown = [towns objectAtIndex:(self.nextLevel-1)/5];
-  
   SKSpriteNode *bg = [SKSpriteNode spriteNodeWithImageNamed:@"nathan-unlocked"];
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
   bg.zPosition = -1;
   [self addChild:bg];
   
+  self.fbShareNode = [SKSpriteNode spriteNodeWithImageNamed:@"fb-share"];
+  self.fbShareNode.anchorPoint = CGPointMake(0.5, 0);
+  self.fbShareNode.position = CGPointMake(self.size.width/2, - self.fbShareNode.frame.size
+                                          .height - MARGIN);
+  [self addChild:self.fbShareNode];
+  SKAction *fbEnter = [SKAction moveToY:MARGIN duration:0.5];
+  
   SKLabelNode *playAgainText = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   playAgainText.fontSize = 32.0;
-  playAgainText.text = [NSString stringWithFormat:@"Yay, you unlocked a new town"];
+  playAgainText.text = [NSString stringWithFormat:@"Yay, you unlocked a new land"];
   playAgainText.fontColor = [LittleThiefConfig yellow];
   playAgainText.position = CGPointMake(-self.size.width, self.size.height*2/3);
   [self addChild:playAgainText];
@@ -154,6 +165,9 @@
   SKAction *moveOut = [SKAction moveTo:CGPointMake(self.size.width * 2, self.size.height*2/3) duration:0.3];
   SKAction *seq1 = [SKAction sequence:@[wait1, unlockSound, moveIn1, wait2, moveOut]];
   [playAgainText runAction:seq1 completion:^{
+    [self.fbShareNode runAction:fbEnter completion:^{
+      self.fbIn = YES;
+    }];
     playAgainText.position = CGPointMake(-self.size.width, self.size.height*2/3);
     playAgainText.text = [NSString stringWithFormat:@"Tap to rob houses in %@", nextTown];
     SKAction *wait3 = [SKAction waitForDuration:0.1];
@@ -165,25 +179,40 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-  NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
-  if (!highScore || self.nextLevel - 1 > highScore) {
-    [[NSUserDefaults standardUserDefaults] setInteger:self.nextLevel forKey:@"HighScore"];
-    highScore = self.nextLevel - 1;
+  for (UITouch *touch in touches) {
+    if (self.fbIn == NO)
+      return;
+    
+    NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
+    if (!highScore || self.nextLevel - 1 > highScore) {
+      [[NSUserDefaults standardUserDefaults] setInteger:self.nextLevel forKey:@"HighScore"];
+      highScore = self.nextLevel - 1;
+    }
+    
+    if (self.limitReached) {
+      IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
+      [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:1.0]];
+      return;
+    }
+    
+    CGPoint location = [touch locationInNode:self];
+    if (location.y < MARGIN + self.fbShareNode.size.height) {
+      FBHelper *fb = [[FBHelper alloc] init];
+      [fb bragUnlocked:self.nextLevel];
+      return;
+    }
+    
+    
+    GameScene *newGame = [[GameScene alloc] initWithSize:self.size];
+    newGame.level = self.nextLevel;
+    if (self.nextLevel <= 26 && (self.nextLevel - 1) % 5 == 0)
+      newGame.bonusSeconds = 0;
+    else
+      newGame.bonusSeconds = self.bonusSeconds;
+    [self.view presentScene:newGame transition:[SKTransition fadeWithDuration:1.0]];
+    
   }
-  
-  if (self.limitReached) {
-    IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
-    [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:1.0]];
-    return;
-  }
-  
-  GameScene *newGame = [[GameScene alloc] initWithSize:self.size];
-  newGame.level = self.nextLevel;
-  if (self.nextLevel <= 26 && (self.nextLevel - 1) % 5 == 0)
-    newGame.bonusSeconds = 0;
-  else
-    newGame.bonusSeconds = self.bonusSeconds;
-  [self.view presentScene:newGame transition:[SKTransition fadeWithDuration:1.0]];
+
 }
 
 

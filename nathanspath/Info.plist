@@ -37,6 +37,20 @@
 		<string>armv7</string>
 		<string>gamekit</string>
 	</array>
+	<key>FacebookAppID</key>
+	<string>790257537676085</string>
+	<key>FacebookDisplayName</key>
+	<string>The Little Thief</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb790257537676085</string>
+				<string>thelittlethief</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>

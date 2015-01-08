@@ -10,6 +10,7 @@
 #import "IntroScene.h"
 #import "LittleThiefConfig.h"
 #import "GameViewController.h"
+#import "FBHelper.h"
 
 @interface LostScene ()
 
@@ -19,25 +20,39 @@
 @property (nonatomic, strong) SKNode *levelReached; //big label
 @property (nonatomic, strong) SKLabelNode *aLabel;
 @property (nonatomic, strong) SKLabelNode *bLabel;
+@property (nonatomic, strong) SKSpriteNode *fbLabel;
 @property BOOL doneTextActions;
+@property BOOL fbDone;
 @property (nonatomic, strong) GameViewController *vc;
 @end
 
 @implementation LostScene
 
+#define WAIT_TIME 2.0
+
 
 - (void)didMoveToView:(SKView *)view {
+  self.fbDone = YES;
   self.vc = (GameViewController *)self.view.window.rootViewController;
   [self setupScene];
 }
 
 - (NSInteger)getHighScore {
   NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
-  if (!highScore || self.level > highScore) {
-    [[NSUserDefaults standardUserDefaults] setInteger:self.level - 1 forKey:@"HighScore"];
-    highScore = self.level;
-  }
   return highScore;
+}
+
+- (void)showFbShare {
+  self.fbLabel = [SKSpriteNode spriteNodeWithImageNamed:@"fb-share"];
+  self.fbLabel.anchorPoint = CGPointMake(0.5, 0);
+  self.fbLabel.position = CGPointMake(self.size.width/2, -self.fbLabel.size.height - MARGIN);
+  [self addChild:self.fbLabel];
+  SKAction *sequence = [SKAction sequence:@[[SKAction waitForDuration:WAIT_TIME], [SKAction moveToY:MARGIN duration:0.5]]];
+  [self.fbLabel runAction:sequence completion:^{
+    self.fbDone = YES;
+  }];
+  
+  
 }
 
 - (void)setupScene {
@@ -58,9 +73,15 @@
   BOOL highScoreBeaten = NO;
   //high score stuff
   NSInteger highScore = [self getHighScore];
-  if (self.level >= highScore)
+  NSLog(@"high score: %lu", highScore);
+  NSLog(@"score reached: %lu", self.level);
+  if (!highScore || self.level > highScore) {
+    [[NSUserDefaults standardUserDefaults] setInteger:self.level forKey:@"HighScore"];
+    highScore = self.level;
     highScoreBeaten = YES;
-  
+    self.fbDone = NO;
+    [self showFbShare];
+  }
   SKAction *gameOverSound = [SKAction playSoundFileNamed:@"game-over.wav" waitForCompletion:NO];
   [self runAction:gameOverSound];
   
@@ -193,14 +214,19 @@
       if (self.doneTextActions == YES)
         [self prepareLeaderboard];
       else {
-        [self runAction:[SKAction waitForDuration:2.0] completion:^{
+        [self runAction:[SKAction waitForDuration:WAIT_TIME] completion:^{
           [self prepareLeaderboard];
         }];
       }
       
       
       
+    } else if (location.y < MARGIN + self.fbLabel.size.height) {
+      FBHelper *fb = [[FBHelper alloc] init];
+      [fb bragHighScore:self.level];
     } else {
+      if (self.fbDone == NO)
+        return;
       IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
       [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:1.0]];
     }

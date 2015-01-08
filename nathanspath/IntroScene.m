@@ -27,6 +27,9 @@
 @implementation IntroScene
 
 
+- (void)testFB {
+}
+
 - (void)didMoveToView:(SKView *)view {
   
   
@@ -39,6 +42,7 @@
     [self.view addGestureRecognizer:self.gestureRecognizer];
     
     [self startBgMusic];
+    [self testFB];
     
   }
   else
@@ -83,18 +87,19 @@
 
 - (void)setTowns {
   NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
-  NSMutableArray *tempTowns = [[NSMutableArray alloc] initWithArray:@[@"Greentown"]];
+  NSArray *allLands = [LittleThiefConfig getEpisodes];
+  NSMutableArray *tempTowns = [[NSMutableArray alloc] initWithArray:@[allLands[0]]];
   if (highScore) {
     if (highScore > 5)
-      [tempTowns addObject:@"Bluetown"];
+      [tempTowns addObject:allLands[1]];
     if (highScore > 10)
-      [tempTowns addObject:@"Yellowtown"];
+      [tempTowns addObject:allLands[2]];
     if (highScore > 15)
-      [tempTowns addObject:@"Greytown"];
+      [tempTowns addObject:allLands[3]];
     if (highScore > 20)
-      [tempTowns addObject:@"Orangetown"];
+      [tempTowns addObject:allLands[4]];
     if (highScore > 25)
-      [tempTowns addObject:@"Redtown"];
+      [tempTowns addObject:allLands[5]];
   }
   self.towns = tempTowns;
   self.selectedTownIndex = [self.towns count] - 1;
@@ -228,7 +233,7 @@
       [self.view removeGestureRecognizer:self.gestureRecognizer];
       GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
       gameScene.level = (self.selectedTownIndex * 5) + 1;
-      //        gameScene.level = 42;
+//      gameScene.level = 1;
       gameScene.onlyInstructions = NO;
       [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.5]];
     }];

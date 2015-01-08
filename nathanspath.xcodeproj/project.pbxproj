@@ -28,6 +28,8 @@
 		ABBDABB71A5A23AA00D127E6 /* undo-move.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABAB1A5A23AA00D127E6 /* undo-move.wav */; };
 		ABBDABB81A5A23AA00D127E6 /* win1.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABAC1A5A23AA00D127E6 /* win1.wav */; };
 		ABBDABB91A5A23AA00D127E6 /* win2.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABAD1A5A23AA00D127E6 /* win2.wav */; };
+		ABBFBA861A5EE4FA00F32AAA /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBFBA851A5EE4FA00F32AAA /* FacebookSDK.framework */; };
+		ABBFBA8A1A5EEB3600F32AAA /* FBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBFBA891A5EEB3600F32AAA /* FBHelper.m */; };
 		ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */; };
 		ABEC7A651A49BF770065E993 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A641A49BF770065E993 /* main.m */; };
 		ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A671A49BF770065E993 /* AppDelegate.m */; };
@@ -72,6 +74,9 @@
 		ABBDABAB1A5A23AA00D127E6 /* undo-move.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "undo-move.wav"; sourceTree = "<group>"; };
 		ABBDABAC1A5A23AA00D127E6 /* win1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win1.wav; sourceTree = "<group>"; };
 		ABBDABAD1A5A23AA00D127E6 /* win2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win2.wav; sourceTree = "<group>"; };
+		ABBFBA851A5EE4FA00F32AAA /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
+		ABBFBA881A5EEB3600F32AAA /* FBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBHelper.h; sourceTree = "<group>"; };
+		ABBFBA891A5EEB3600F32AAA /* FBHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBHelper.m; sourceTree = "<group>"; };
 		ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroScene.h; sourceTree = "<group>"; };
 		ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroScene.m; sourceTree = "<group>"; };
 		ABEC7A5F1A49BF770065E993 /* nathanspath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nathanspath.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +105,7 @@
 			files = (
 				AB4647DA1A5D736900730E62 /* GameKit.framework in Frameworks */,
 				ABBDABA11A5A231E00D127E6 /* AVFoundation.framework in Frameworks */,
+				ABBFBA861A5EE4FA00F32AAA /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,11 +155,20 @@
 			name = sounds;
 			sourceTree = "<group>";
 		};
+		ABBFBA871A5EE50000F32AAA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ABBFBA851A5EE4FA00F32AAA /* FacebookSDK.framework */,
+				AB4647D91A5D736900730E62 /* GameKit.framework */,
+				ABBDABA01A5A231E00D127E6 /* AVFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		ABEC7A561A49BF770065E993 = {
 			isa = PBXGroup;
 			children = (
-				AB4647D91A5D736900730E62 /* GameKit.framework */,
-				ABBDABA01A5A231E00D127E6 /* AVFoundation.framework */,
+				ABBFBA871A5EE50000F32AAA /* Frameworks */,
 				ABEC7A611A49BF770065E993 /* thelittlethief */,
 				ABEC7A801A49BF770065E993 /* thelittlethieftests */,
 				ABEC7A601A49BF770065E993 /* Products */,
@@ -199,6 +214,8 @@
 		ABEC7A621A49BF770065E993 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				ABBFBA881A5EEB3600F32AAA /* FBHelper.h */,
+				ABBFBA891A5EEB3600F32AAA /* FBHelper.m */,
 				ABEC7A661A49BF770065E993 /* AppDelegate.h */,
 				ABEC7A671A49BF770065E993 /* AppDelegate.m */,
 				ABEC7A631A49BF770065E993 /* Info.plist */,
@@ -355,6 +372,7 @@
 				ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */,
 				ABEC7A6B1A49BF770065E993 /* GameScene.m in Sources */,
 				AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */,
+				ABBFBA8A1A5EEB3600F32AAA /* FBHelper.m in Sources */,
 				ABEC7A651A49BF770065E993 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -480,6 +498,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/minhtri/Documents/FacebookSDK,
+				);
 				INFOPLIST_FILE = nathanspath/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -495,6 +517,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/minhtri/Documents/FacebookSDK,
+				);
 				INFOPLIST_FILE = nathanspath/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
