@@ -51,6 +51,14 @@
       self.limitReached = YES;
   }
   if (self.limitReached) {
+    self.fbIn = NO;
+    self.fbShareNode = [SKSpriteNode spriteNodeWithImageNamed:@"fb-share"];
+    self.fbShareNode.anchorPoint = CGPointMake(0.5, 0);
+    self.fbShareNode.position = CGPointMake(self.size.width/2, - self.fbShareNode.frame.size
+                                            .height - MARGIN);
+    [self addChild:self.fbShareNode];
+    SKAction *fbEnter = [SKAction moveToY:MARGIN duration:0.5];
+    
     self.backgroundColor = [LittleThiefConfig darkBlue];
     SKLabelNode *congr = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
     congr.fontSize = 50;
@@ -101,6 +109,10 @@
     sign.text = @"Minh Tri Pham";
     sign.position = CGPointMake(self.size.width/2, self.size.height*1/9);
     [self addChild:sign];
+    
+    [self.fbShareNode runAction:fbEnter completion:^{
+      self.fbIn = YES;
+    }];
     
     return YES;
   }
@@ -182,7 +194,7 @@
   for (UITouch *touch in touches) {
     if (self.fbIn == NO)
       return;
-    
+    CGPoint location = [touch locationInNode:self];
     NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
     if (!highScore || self.nextLevel - 1 > highScore) {
       [[NSUserDefaults standardUserDefaults] setInteger:self.nextLevel forKey:@"HighScore"];
@@ -190,12 +202,17 @@
     }
     
     if (self.limitReached) {
+      if (location.y < MARGIN + self.fbShareNode.size.height) {
+        FBHelper *fb = [[FBHelper alloc] init];
+        [fb bragHighScore:self.nextLevel];
+        return;
+      }
       IntroScene *introScene = [[IntroScene alloc] initWithSize:self.size];
       [self.view presentScene:introScene transition:[SKTransition fadeWithDuration:1.0]];
       return;
     }
     
-    CGPoint location = [touch locationInNode:self];
+    
     if (location.y < MARGIN + self.fbShareNode.size.height) {
       FBHelper *fb = [[FBHelper alloc] init];
       [fb bragUnlocked:self.nextLevel];

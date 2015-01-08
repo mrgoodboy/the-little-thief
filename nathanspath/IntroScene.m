@@ -232,8 +232,8 @@
     [self.nathan runAction:runAction completion:^{
       [self.view removeGestureRecognizer:self.gestureRecognizer];
       GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
-      gameScene.level = (self.selectedTownIndex * 5) + 1;
-//      gameScene.level = 1;
+//      gameScene.level = (self.selectedTownIndex * 5) + 1;
+      gameScene.level = 19;
       gameScene.onlyInstructions = NO;
       [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.5]];
     }];

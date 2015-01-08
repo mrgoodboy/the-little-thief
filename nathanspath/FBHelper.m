@@ -55,7 +55,7 @@
     // Put together the dialog parameters
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    [NSString stringWithFormat:@"I just unlocked %@ on The Little Thief", landUnlocked], @"name",
-                                   [NSString stringWithFormat:@"Download The Little Thief, too"], @"caption",
+                                   @"", @"caption",
                                    description, @"description",
                                    FB_APPLINK, @"link",
                                    FB_IMAGE_URL, @"picture",
@@ -137,7 +137,7 @@
     // Put together the dialog parameters
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    title, @"name",
-                                   [NSString stringWithFormat:@"Download The Little Thief, too"], @"caption",
+                                   @"", @"caption",
                                    description, @"description",
                                    FB_APPLINK, @"link",
                                    FB_IMAGE_URL, @"picture",
