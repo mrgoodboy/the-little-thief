@@ -21,8 +21,11 @@
 
 + (SKColor *)red {
   return [SKColor colorWithRed:216.0/255.0 green:35.0/255.0 blue:41.0/255.0 alpha:0.95];
-  
 }
 
++ (CGFloat)getBonusFactor:(CGFloat)level {
+  NSInteger town = ceil(level/5.0);
+  return town/10.0 + 0.2;
+}
 
 @end

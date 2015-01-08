@@ -13,10 +13,13 @@
 
 #define MARGIN 20.0
 #define GAME_DURATION 35
+#define DURATION_INCREASE_FACTOR 1
 #define MIN_REPORT_SCORE 2
 
 + (SKColor *)yellow;
 + (SKColor *)darkBlue;
 + (SKColor *)red;
+
++ (CGFloat)getBonusFactor:(CGFloat)level;
 
 @end

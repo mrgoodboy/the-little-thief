@@ -622,7 +622,6 @@
 }
 
 #define SCENE_TRANSITION_DURATION 1.0
-#define BONUS_FACTOR 0.5
 
 - (void)checkWin {
   if ([self.visitedVertices count] == [self.vertices count] + 1) {
@@ -630,7 +629,9 @@
     [self doVolumeFade];
     WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
     wonScene.nextLevel = self.level + 1;
-    wonScene.bonusSeconds = self.timeLeft*BONUS_FACTOR;
+    CGFloat bonusFactor = [LittleThiefConfig getBonusFactor:self.level + 1];
+    wonScene.bonusSeconds = self.timeLeft*bonusFactor;
+    NSLog(@"bonus seconds: %lu, bonus factor: %f", wonScene.bonusSeconds, bonusFactor);
     [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
   }
   
@@ -785,7 +786,7 @@
       self.startTime += self.bonusSeconds;
   }
 
-  NSInteger gameDuration = ceil(self.level/5.0) * GAME_DURATION;
+  NSInteger gameDuration = ceil(self.level/5.0) * GAME_DURATION * DURATION_INCREASE_FACTOR;
   if (self.inGame) {
     int countDownInt = (int)(currentTime - self.startTime);
     if (countDownInt < gameDuration) {

@@ -55,9 +55,11 @@
   [self addChild:self.leaderboardLabel];
   
   
-  
+  BOOL highScoreBeaten = NO;
   //high score stuff
   NSInteger highScore = [self getHighScore];
+  if (self.level >= highScore)
+    highScoreBeaten = YES;
   
   SKAction *gameOverSound = [SKAction playSoundFileNamed:@"game-over.wav" waitForCompletion:NO];
   [self runAction:gameOverSound];
@@ -80,7 +82,14 @@
     self.bLabel.fontSize = 40.0;
     self.bLabel.fontColor = [LittleThiefConfig yellow];
     NSString *st1 = [NSString stringWithFormat:@"level reached: %ld", (long)self.level];
-    NSString *st2 = [NSString stringWithFormat:@"highest reached: %lu", (long)highScore];;
+    NSString *st2 = [NSString stringWithFormat:@"highest reached: %lu", (long)highScore];
+    
+    if (highScoreBeaten) {
+      st1 = @"NEW HIGH SCORE!!!";
+      st2 = [NSString stringWithFormat:@"level reached: %ld", (long)self.level];
+      [self runAction:[SKAction playSoundFileNamed:@"win2.wav" waitForCompletion:NO]];
+    }
+    
     self.bLabel.position = CGPointMake(self.bLabel.position.x, self.bLabel.position.y - self.aLabel.frame.size.height - 50);
     self.aLabel.text = st1;
     self.bLabel.text = st2;
