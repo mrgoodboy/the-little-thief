@@ -11,49 +11,13 @@
 #import "LostScene.h"
 #import "IntroScene.h"
 #include "stdlib.h"
+#import "InstructionsScene.h"
 #import "LittleThiefConfig.h"
+#import "SKStackView.h"
 
-#import "AVFoundation/AVFoundation.h"
+
 
 @interface GameScene ()
-
-@property NSString *deviceSuffix; //for instructions
-@property (nonatomic, strong) SKSpriteNode *nathan;
-@property (nonatomic, strong) SKSpriteNode *playground;
-@property (nonatomic, strong) NSMutableArray *vertices; //names of vertices
-@property (nonatomic, strong) NSMutableDictionary *edges; //names of edges
-@property (nonatomic, strong) NSMutableArray *visitedVertices; //names of vertices
-@property (nonatomic, strong) SKSpriteNode *undoButton;
-@property (nonatomic, strong) SKSpriteNode *repositionButton;
-@property (nonatomic, strong) SKLabelNode *timerLabel;
-@property (nonatomic, strong) SKSpriteNode *pauseButton;
-
-@property (nonatomic, strong) SKSpriteNode *pauseBg;
-@property (nonatomic, strong) SKSpriteNode *backButton;
-@property (nonatomic, strong) SKLabelNode *quitButton;
-@property (nonatomic, strong) SKLabelNode *instructionsButton;
-@property (nonatomic, strong) SKSpriteNode *instructionsBg;
-@property NSInteger instructionNumber;
-@property (nonatomic, strong) SKLabelNode *instructionsLabel;
-
-
-@property NSTimeInterval startTime;
-@property NSInteger timeLeft;
-@property BOOL inGame;
-
-@property NSInteger direction; //0 up 1 down 2 right 3 left nathan
-@property (nonatomic, strong) NSMutableArray *directionHistory;
-@property (nonatomic, strong) SKTextureAtlas *runningNathanAtlas;
-
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRightGestureRecognizer;
-
-@property (nonatomic, strong) AVAudioPlayer *player; //bg music
-@property (nonatomic, strong) AVAudioPlayer *runPlayer;
-@property (nonatomic, strong) AVAudioPlayer *clockPlayer;
-
-//game config
-@property NSInteger sizeChangeLevel; //level for size change
 
 @end
 @implementation GameScene
@@ -90,17 +54,24 @@
 }
 
 
-
 #pragma mark Setup
-
-
 
 - (void)didMoveToView:(SKView *)view {
   [self mySetDeviceSuffix];
   
   if (self.onlyInstructions) {
+    if (self.inInstructions) {
+      [self backToIntro];
+      return;
+    }
+    
     self.inGame = NO;
     [self viewInstructions];
+    return;
+  }
+  
+  if (self.inInstructions) {
+    self.inInstructions = NO;
     return;
   }
   
@@ -110,7 +81,7 @@
   [self addPauseButton];
   [self addLevelLabel];
   [self addTimerLabel];
-  
+  self.gameDuration = [self getGameDuration];
   
   if (self.level > 5)
     [self startBgMusic];
@@ -129,14 +100,11 @@
   [self positionVertices];
   [self drawEdges];
   
-  self.instructionNumber = 0;
   self.inGame = YES;
 }
 
 - (void)willMoveFromView:(SKView *)view {
   [self doVolumeFade];
-  [self.view removeGestureRecognizer:self.swipeLeftGestureRecognizer];
-  [self.view removeGestureRecognizer:self.swipeRightGestureRecognizer];
 }
 
 - (void)startBgMusic {
@@ -218,7 +186,9 @@
 
 - (void)setBackground {
   SKSpriteNode *bg;
-  if (self.level < 6) {
+  if (self.level == 0) {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-green"];
+  } else if (self.level < 6) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-blue"];
   } else if (self.level < 11) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-purple"];
@@ -556,10 +526,6 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   for (UITouch *touch in touches) {
-    if (self.instructionNumber > 0) {
-      return;
-    }
-    
     CGPoint touchPoint;
     if (!self.inGame) {
       touchPoint = [touch locationInNode:self.pauseBg];
@@ -664,7 +630,7 @@
   [self playButtonSound];
   self.inGame = NO;
   self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"transition-screen%@", self.deviceSuffix]];
-  self.pauseBg.zPosition = 10;
+  self.pauseBg.zPosition = 5;
   self.pauseBg.position = CGPointMake(self.size.width/2, self.size.height/2);
   [self addChild:self.pauseBg];
   
@@ -674,19 +640,23 @@
   self.backButton = [SKSpriteNode spriteNodeWithImageNamed:@"back-button"];
   self.backButton.anchorPoint = CGPointMake(0.0, 1.0);
   self.backButton.position = CGPointMake(-deviceWidth/2 + MARGIN, deviceHeight/2 - MARGIN);
+  self.backButton.zPosition = 6;
   [self.pauseBg addChild:self.backButton];
   
   self.quitButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   self.quitButton.fontColor = [SKColor whiteColor];
   self.quitButton.fontSize = 40.0;
   self.quitButton.text = @"Quit Game";
-  self.quitButton.position = CGPointMake(0, -35);  [self.pauseBg addChild:self.quitButton];
+  self.quitButton.position = CGPointMake(0, -35);
+  self.quitButton.zPosition = 6;
+  [self.pauseBg addChild:self.quitButton];
   
   self.instructionsButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   self.instructionsButton.fontColor = [SKColor whiteColor];
   self.instructionsButton.fontSize = 40.0;
   self.instructionsButton.text = @"Instructions";
   self.instructionsButton.position = CGPointMake(0, 35);
+  self.instructionsButton.zPosition = 6;
   [self.pauseBg addChild:self.instructionsButton];
   NSString *hs = [[NSUserDefaults standardUserDefaults] objectForKey:@"HighScore"];
   if (hs) {
@@ -696,6 +666,7 @@
     highScore.text = [NSString stringWithFormat:@"High score: lvl %@", hs];
     highScore.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
     highScore.position = CGPointMake(0, self.pauseBg.size.height/2 - MARGIN -10);
+    highScore.zPosition = 6;
     [self.pauseBg addChild:highScore];
   }
 
@@ -712,84 +683,15 @@
 }
 
 
-- (void)addInstructionLabel {
-  self.instructionsLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
-  self.instructionsLabel.fontSize = 25.0;
-  self.instructionsLabel.zPosition = 20;
-  self.instructionsLabel.text = @"Instructions";
-  self.instructionsLabel.color = [SKColor whiteColor];
-  self.instructionsLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
-  self.instructionsLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
-  self.instructionsLabel.position = CGPointMake(MARGIN, self.size.height - MARGIN);
-  [self addChild:self.instructionsLabel];
-}
+
 
 - (void)viewInstructions {
-  [self addInstructionLabel];
-  self.instructionNumber = 1;
-
-  NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
-  SKTexture *texture = [SKTexture textureWithImageNamed:imgName];
-  self.instructionsBg = [SKSpriteNode spriteNodeWithTexture:texture];
-  self.instructionsBg.position = CGPointMake(self.size.width/2, self.size.height/2);
-  self.instructionsBg.zPosition = 15;
-  [self addChild:self.instructionsBg];
-  
-  self.swipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRightInstruction:)];
-  self.swipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-  [self.view addGestureRecognizer:self.swipeRightGestureRecognizer];
-  
-  self.swipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeftInstruction:)];
-  self.swipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-  [self.view addGestureRecognizer:self.swipeLeftGestureRecognizer];
-  
-}
-
-- (void)swipeRightInstruction:(UISwipeGestureRecognizer *)sender {
-  self.instructionNumber--;
-  if (self.instructionNumber <= 0) {
-    [self.view removeGestureRecognizer:self.swipeRightGestureRecognizer];
-    [self.view removeGestureRecognizer:self.swipeLeftGestureRecognizer];
-    
-    SKLabelNode *swipeInstruction = (SKLabelNode *)[self childNodeWithName:@"swipe instruction"];
-    if (swipeInstruction)
-      [swipeInstruction removeFromParent];
-    
-    if (self.onlyInstructions) {
-      [self backToIntro];
-      
-      return;
-    }
-    [self.instructionsLabel removeFromParent];
-    [self.instructionsBg removeFromParent];
-
-    return;
-  }
-  NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
-  SKTexture *texture = [SKTexture textureWithImageNamed:imgName];
-  self.instructionsBg.texture = texture;
-}
-
-- (void)swipeLeftInstruction:(UISwipeGestureRecognizer *)sender {
-  
-  self.instructionNumber++;
-  if (self.instructionNumber >= 13) {
-    [self.view removeGestureRecognizer:self.swipeLeftGestureRecognizer];
-    [self.view removeGestureRecognizer:self.swipeRightGestureRecognizer];
-    
-    if (self.onlyInstructions) {
-      [self backToIntro];
-      return;
-    }
-    self.instructionNumber = 0;
-    [self.instructionsLabel removeFromParent];
-    [self.instructionsBg removeFromParent];
-    return;
-  }
-  NSString *imgName = [NSString stringWithFormat:@"%ld%@", (long)self.instructionNumber, self.deviceSuffix];
-  SKTexture *texture = [SKTexture textureWithImageNamed:imgName];
-  self.instructionsBg.texture = texture;
-  
+  InstructionsScene *scene = [[InstructionsScene alloc] initWithSize:self.size];
+  scene.level = 0;
+  SKStackView *view = (SKStackView *)self.view;
+  [view pushScene:self];
+  self.inInstructions = YES;
+  [view presentScene:scene transition:[SKTransition fadeWithDuration:0.5]];
 }
 
 - (NSInteger)getGameDuration {
@@ -808,11 +710,11 @@
       self.startTime += self.bonusSeconds;
   }
 
-  NSInteger gameDuration = [self getGameDuration];
   if (self.inGame) {
+    
     int countDownInt = (int)(currentTime - self.startTime);
-    if (countDownInt < gameDuration) {
-      self.timeLeft = gameDuration - countDownInt;
+    if (countDownInt < self.gameDuration) {
+      self.timeLeft = self.gameDuration - countDownInt;
       if (self.timeLeft <= 10 && self.clockPlayer.isPlaying == NO) {
         [self.clockPlayer play];
         self.timerLabel.fontColor = [LittleThiefConfig red];
@@ -823,7 +725,7 @@
       [self lostGame];
     }
   } else {
-    self.startTime = currentTime - gameDuration + self.timeLeft;
+    self.startTime = currentTime - self.gameDuration + self.timeLeft;
   }
 }
 
@@ -839,7 +741,8 @@
 }
 
 - (void)changeTextureOfVertex:(NSString *)vertexName toTexture:(SKTexture *)texture {
-  if (vertexName != [self.visitedVertices firstObject]) {
+  if (![vertexName isEqualToString:[self.visitedVertices firstObject]]) {
+    NSLog(@"changing texture of %@", vertexName);
     SKSpriteNode *vertex = [self vertexWithName:vertexName];
     [vertex setTexture:texture];
   }

@@ -23,15 +23,15 @@
 
 @implementation WonScene
 
-
+//reporting nextLevel unless reached last level
 
 - (void)didMoveToView:(SKView *)view {
   self.fbIn = YES; //block only when unlock
   if ([self checkLimits]) {
     NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
     if (!highScore || self.nextLevel - 1 > highScore) {
-      [[NSUserDefaults standardUserDefaults] setInteger:self.nextLevel forKey:@"HighScore"];
       highScore = self.nextLevel - 1;
+      [[NSUserDefaults standardUserDefaults] setInteger:highScore forKey:@"HighScore"];
       [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
@@ -207,12 +207,8 @@
   for (UITouch *touch in touches) {
     if (self.fbIn == NO)
       return;
+    
     CGPoint location = [touch locationInNode:self];
-    NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
-    if (!highScore || self.nextLevel - 1 > highScore) {
-      [[NSUserDefaults standardUserDefaults] setInteger:self.nextLevel forKey:@"HighScore"];
-      highScore = self.nextLevel - 1;
-    }
     
     if (self.limitReached) {
       if (location.y < MARGIN + self.fbShareNode.size.height) {
@@ -225,6 +221,12 @@
       return;
     }
     
+    NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
+    if (!highScore || self.nextLevel > highScore) {
+      highScore = self.nextLevel;
+      [[NSUserDefaults standardUserDefaults] setInteger:self.nextLevel forKey:@"HighScore"];
+    }
+    
     
     if (location.y < MARGIN + self.fbShareNode.size.height) {
       FBHelper *fb = [[FBHelper alloc] init];
@@ -235,7 +237,7 @@
     
     GameScene *newGame = [[GameScene alloc] initWithSize:self.size];
     newGame.level = self.nextLevel;
-    if (self.nextLevel <= 26 && (self.nextLevel - 1) % 5 == 0)
+    if ((self.nextLevel - 1) % 5 == 0)
       newGame.bonusSeconds = 0;
     else
       newGame.bonusSeconds = self.bonusSeconds;
@@ -262,6 +264,7 @@
   }
 }
 
+//limit reached
 - (void)reportScore {
   GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:self.leaderboardIdentifier];
   score.value = self.nextLevel - 1;

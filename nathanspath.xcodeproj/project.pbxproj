@@ -30,6 +30,8 @@
 		ABBDABB91A5A23AA00D127E6 /* win2.wav in Resources */ = {isa = PBXBuildFile; fileRef = ABBDABAD1A5A23AA00D127E6 /* win2.wav */; };
 		ABBFBA861A5EE4FA00F32AAA /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBFBA851A5EE4FA00F32AAA /* FacebookSDK.framework */; };
 		ABBFBA8A1A5EEB3600F32AAA /* FBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBFBA891A5EEB3600F32AAA /* FBHelper.m */; };
+		ABBFBA931A5FED6D00F32AAA /* SKStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBFBA921A5FED6D00F32AAA /* SKStackView.m */; };
+		ABBFBA961A5FEEA800F32AAA /* InstructionsScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBFBA951A5FEEA800F32AAA /* InstructionsScene.m */; };
 		ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */; };
 		ABEC7A651A49BF770065E993 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A641A49BF770065E993 /* main.m */; };
 		ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEC7A671A49BF770065E993 /* AppDelegate.m */; };
@@ -77,6 +79,10 @@
 		ABBFBA851A5EE4FA00F32AAA /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		ABBFBA881A5EEB3600F32AAA /* FBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBHelper.h; sourceTree = "<group>"; };
 		ABBFBA891A5EEB3600F32AAA /* FBHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBHelper.m; sourceTree = "<group>"; };
+		ABBFBA911A5FED6D00F32AAA /* SKStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKStackView.h; sourceTree = "<group>"; };
+		ABBFBA921A5FED6D00F32AAA /* SKStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKStackView.m; sourceTree = "<group>"; };
+		ABBFBA941A5FEEA800F32AAA /* InstructionsScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstructionsScene.h; sourceTree = "<group>"; };
+		ABBFBA951A5FEEA800F32AAA /* InstructionsScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstructionsScene.m; sourceTree = "<group>"; };
 		ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroScene.h; sourceTree = "<group>"; };
 		ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroScene.m; sourceTree = "<group>"; };
 		ABEC7A5F1A49BF770065E993 /* nathanspath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nathanspath.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,6 +196,8 @@
 				ABBDAB6B1A59F6FD00D127E6 /* sounds */,
 				ABB169D01A4F42BE004A90D6 /* fonts */,
 				ABB169E01A4F6A32004A90D6 /* atlases */,
+				ABBFBA941A5FEEA800F32AAA /* InstructionsScene.h */,
+				ABBFBA951A5FEEA800F32AAA /* InstructionsScene.m */,
 				ABCDEBEE1A4F08F600E2C70C /* IntroScene.h */,
 				ABCDEBEF1A4F08F600E2C70C /* IntroScene.m */,
 				ABEC7A691A49BF770065E993 /* GameScene.h */,
@@ -200,6 +208,8 @@
 				AB76E1CF1A4F76FF0030C9D3 /* LostScene.m */,
 				ABEC7A6E1A49BF770065E993 /* GameViewController.h */,
 				ABEC7A6F1A49BF770065E993 /* GameViewController.m */,
+				ABBFBA911A5FED6D00F32AAA /* SKStackView.h */,
+				ABBFBA921A5FED6D00F32AAA /* SKStackView.m */,
 				AB4828FC1A5ABC77007F3BF8 /* LittleThiefConfig.h */,
 				AB4828FD1A5ABC77007F3BF8 /* LittleThiefConfig.m */,
 				ABEC7A741A49BF770065E993 /* Images.xcassets */,
@@ -369,7 +379,9 @@
 				ABCDEBF01A4F08F600E2C70C /* IntroScene.m in Sources */,
 				ABF61CDC1A4C2658002CBFEE /* WonScene.m in Sources */,
 				ABEC7A701A49BF770065E993 /* GameViewController.m in Sources */,
+				ABBFBA961A5FEEA800F32AAA /* InstructionsScene.m in Sources */,
 				ABEC7A681A49BF770065E993 /* AppDelegate.m in Sources */,
+				ABBFBA931A5FED6D00F32AAA /* SKStackView.m in Sources */,
 				ABEC7A6B1A49BF770065E993 /* GameScene.m in Sources */,
 				AB76E1D01A4F76FF0030C9D3 /* LostScene.m in Sources */,
 				ABBFBA8A1A5EEB3600F32AAA /* FBHelper.m in Sources */,

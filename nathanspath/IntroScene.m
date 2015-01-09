@@ -124,7 +124,7 @@
     self.arrow = [SKSpriteNode spriteNodeWithImageNamed:@"intro-swipe-arrow"];
     self.bg = [SKSpriteNode spriteNodeWithImageNamed:@"intro-screen"];
   }
-  
+  self.bg.zPosition = -1;
   self.bg.position = CGPointMake(self.bg.size.width/2, self.bg.size.height/2);
   [self addChild:self.bg];
   
