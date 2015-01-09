@@ -123,6 +123,8 @@
   [self addNathan];
   
   NSInteger numOfVertices = (NSInteger)ceil(self.level/2.0) + 3;
+  if (numOfVertices > 14)
+    numOfVertices = 14;
   [self generateGraph:numOfVertices];
   [self positionVertices];
   [self drawEdges];
@@ -226,8 +228,10 @@
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-grey"];
   } else if (self.level < 26) {
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-orange"];
-  } else {
+  } else if (self.level < 31){
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-red"];
+  } else {
+    bg = [SKSpriteNode spriteNodeWithImageNamed:@"dusty-black"];
   }
   
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
@@ -395,7 +399,10 @@
       CGPathAddLineToPoint(pathToDraw, NULL, destinationPoint.x, destinationPoint.y);
       edge.path = pathToDraw;
       edge.zPosition = -9;
-      [edge setStrokeColor:[SKColor blackColor]];
+      if (self.level > 30)
+        [edge setStrokeColor:[SKColor lightGrayColor]];
+      else
+        [edge setStrokeColor:[SKColor blackColor]];
       [self.playground addChild:edge];
       
       if ([added objectForKey:vertexName]) {
@@ -571,6 +578,12 @@
       }
     
     } else {
+      
+//      WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
+//      wonScene.nextLevel = self.level + 1;
+//      [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:FADE_OUT_DURATION]];
+
+      
       touchPoint = [touch locationInNode:self];
       if ([self.undoButton containsPoint:touchPoint]) {
         [self undoMove];
@@ -630,6 +643,8 @@
     WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
     wonScene.nextLevel = self.level + 1;
     CGFloat bonusFactor = [LittleThiefConfig getBonusFactor:self.level + 1];
+    if (self.level > 20)
+      bonusFactor = 0;
     wonScene.bonusSeconds = self.timeLeft*bonusFactor;
     NSLog(@"bonus seconds: %lu, bonus factor: %f", wonScene.bonusSeconds, bonusFactor);
     [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];
@@ -777,6 +792,13 @@
   
 }
 
+- (NSInteger)getGameDuration {
+  if (self.level <= 20) {
+    return ceil(self.level/5.0) * GAME_DURATION * DURATION_INCREASE_FACTOR;
+  } else {
+    return 175 - ((self.level - 21) * 10);
+  }
+}
 
 
 - (void)update:(CFTimeInterval)currentTime {
@@ -786,7 +808,7 @@
       self.startTime += self.bonusSeconds;
   }
 
-  NSInteger gameDuration = ceil(self.level/5.0) * GAME_DURATION * DURATION_INCREASE_FACTOR;
+  NSInteger gameDuration = [self getGameDuration];
   if (self.inGame) {
     int countDownInt = (int)(currentTime - self.startTime);
     if (countDownInt < gameDuration) {

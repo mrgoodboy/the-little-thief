@@ -15,7 +15,7 @@
 #define GAME_DURATION 35
 #define DURATION_INCREASE_FACTOR 1
 #define MIN_REPORT_SCORE 2
-#define SHAREWORTHY_LEVEL 7
+#define SHAREWORTHY_LEVEL 1
 
 #define FB_NAMESPACE @"pmtlittlethief"
 #define FB_IMAGE_URL @"http://zyxlabs.com/static/img/fb-nathan.png"

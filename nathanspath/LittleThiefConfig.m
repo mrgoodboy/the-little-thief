@@ -24,7 +24,7 @@
 }
 
 + (NSArray *)getEpisodes {
-  return @[@"Blueland", @"Purpleland", @"Yellowland", @"Greyland", @"Orangeland", @"Redland"];
+  return @[@"Blueland", @"Purpleland", @"Yellowland", @"Greyland", @"Orangeland", @"Redland", @"Blackland"];
 }
 
 + (NSString *)getLandnameFromLevel:(NSInteger) level {

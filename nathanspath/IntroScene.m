@@ -100,6 +100,8 @@
       [tempTowns addObject:allLands[4]];
     if (highScore > 25)
       [tempTowns addObject:allLands[5]];
+    if (highScore > 30)
+      [tempTowns addObject:allLands[6]];
   }
   self.towns = tempTowns;
   self.selectedTownIndex = [self.towns count] - 1;
@@ -232,8 +234,8 @@
     [self.nathan runAction:runAction completion:^{
       [self.view removeGestureRecognizer:self.gestureRecognizer];
       GameScene *gameScene= [[GameScene alloc] initWithSize:self.size];
-//      gameScene.level = (self.selectedTownIndex * 5) + 1;
-      gameScene.level = 19;
+      gameScene.level = (self.selectedTownIndex * 5) + 1;
+//      gameScene.level = 21;
       gameScene.onlyInstructions = NO;
       [self.view presentScene:gameScene transition:[SKTransition fadeWithDuration:1.5]];
     }];
