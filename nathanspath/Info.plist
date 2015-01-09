@@ -17,11 +17,25 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.92</string>
+	<string>0.93</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb790257537676085</string>
+				<string>thelittlethief</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>0.92</string>
+	<string>0.93</string>
+	<key>FacebookAppID</key>
+	<string>790257537676085</string>
+	<key>FacebookDisplayName</key>
+	<string>The Little Thief</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
@@ -36,20 +50,6 @@
 	<array>
 		<string>armv7</string>
 		<string>gamekit</string>
-	</array>
-	<key>FacebookAppID</key>
-	<string>790257537676085</string>
-	<key>FacebookDisplayName</key>
-	<string>The Little Thief</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb790257537676085</string>
-				<string>thelittlethief</string>
-			</array>
-		</dict>
 	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>
