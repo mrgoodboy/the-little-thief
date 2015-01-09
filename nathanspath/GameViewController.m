@@ -8,6 +8,7 @@
 
 #import "GameViewController.h"
 #import "IntroScene.h"
+#import "SKStackView.h"
 @implementation SKScene (Unarchive)
 
 + (instancetype)unarchiveFromFile:(NSString *)file {
@@ -34,7 +35,7 @@
   [super viewDidLoad];
   
   // Configure the view.
-  SKView * skView = (SKView *)self.view;
+  SKStackView *skView = (SKStackView *)self.view;
   skView.showsFPS = NO;
   skView.showsNodeCount = NO;
   /* Sprite Kit applies additional optimizations to improve rendering performance */

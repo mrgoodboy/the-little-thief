@@ -1,12 +1,14 @@
 //
 //  AppDelegate.m
-//  nathanspath
+//
 //
 //  Created by Minh Tri Pham on 12/23/14.
 //  Copyright (c) 2014 pmt. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "LittleThiefConfig.h"
+#import <Appirater/Appirater.h>
 
 @interface AppDelegate ()
 
@@ -16,6 +18,15 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  
+  [Appirater setAppId:APP_ID];
+  [Appirater setDaysUntilPrompt:0];
+  [Appirater setUsesUntilPrompt:5];
+  [Appirater setTimeBeforeReminding:2];
+  [Appirater setSignificantEventsUntilPrompt:-1];
+  
+  [Appirater setDebug:NO];
+  [Appirater appLaunched:YES];
   return YES;
 }
 
@@ -35,6 +46,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
   // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+  [Appirater appEnteredForeground:YES];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

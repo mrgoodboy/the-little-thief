@@ -11,6 +11,7 @@
 #import "LittleThiefConfig.h"
 #import "GameViewController.h"
 #import "FBHelper.h"
+#import <Appirater/Appirater.h>
 
 @interface LostScene ()
 
@@ -73,8 +74,8 @@
   BOOL highScoreBeaten = NO;
   //high score stuff
   NSInteger highScore = [self getHighScore];
-  NSLog(@"high score: %lu", highScore);
-  NSLog(@"score reached: %lu", self.level);
+  NSLog(@"high score: %lu", (long)highScore);
+  NSLog(@"score reached: %lu", (long)self.level);
   if (!highScore || self.level > highScore) {
     [[NSUserDefaults standardUserDefaults] setInteger:self.level forKey:@"HighScore"];
     highScore = self.level;
@@ -82,6 +83,7 @@
     self.fbDone = NO;
     [self showFbShare];
   }
+  
   SKAction *gameOverSound = [SKAction playSoundFileNamed:@"game-over.wav" waitForCompletion:NO];
   [self runAction:gameOverSound];
   
