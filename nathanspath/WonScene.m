@@ -162,7 +162,7 @@
   NSArray *towns = [LittleThiefConfig getEpisodes];
   NSString *nextTown = [towns objectAtIndex:(self.nextLevel-1)/5];
   SKSpriteNode *bg;
-  if (self.size.height > 960)
+  if (self.size.height > 480)
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"nathan-unlocked"];
   else
     bg = [SKSpriteNode spriteNodeWithImageNamed:@"nathan-unlocked-4"];

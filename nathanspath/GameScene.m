@@ -643,8 +643,6 @@
     WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
     wonScene.nextLevel = self.level + 1;
     CGFloat bonusFactor = [LittleThiefConfig getBonusFactor:self.level + 1];
-    if (self.level > 20)
-      bonusFactor = 0;
     wonScene.bonusSeconds = self.timeLeft*bonusFactor;
     NSLog(@"bonus seconds: %lu, bonus factor: %f", wonScene.bonusSeconds, bonusFactor);
     [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:SCENE_TRANSITION_DURATION]];

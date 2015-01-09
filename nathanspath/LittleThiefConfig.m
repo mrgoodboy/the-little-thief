@@ -16,7 +16,7 @@
 
 + (SKColor *)darkBlue {
   return [SKColor colorWithRed:54.0/255.0 green:54.0/255.0 blue:127.0/255.0 alpha:0.95];
-
+  
 }
 
 + (SKColor *)red {
@@ -28,13 +28,17 @@
 }
 
 + (NSString *)getLandnameFromLevel:(NSInteger) level {
-   NSInteger town = ceil((level-1)/5.0);
+  NSInteger town = ceil((level-1)/5.0);
   return [[LittleThiefConfig getEpisodes] objectAtIndex:town];
 }
 
 + (CGFloat)getBonusFactor:(CGFloat)level {
-  NSInteger town = ceil(level/5.0);
-  return town/10.0 + 0.2;
+  if (level >= 21) {
+    return 0;
+  } else {
+    NSInteger town = ceil(level/5.0);
+    return town/10.0 + 0.2;
+  }
 }
 
 @end
