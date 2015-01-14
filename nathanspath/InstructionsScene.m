@@ -18,12 +18,14 @@
 @property (nonatomic, strong) SKLabelNode *bLabel;
 @property (nonatomic, strong) SKSpriteNode *pointerNode;
 @property (nonatomic, strong) SKSpriteNode *crossNode;
+@property (nonatomic, strong) SKSpriteNode *nextNode;
 @property BOOL startCounting;
 @property BOOL readyForNext;
 @end
 @implementation InstructionsScene
 
 - (void)didMoveToView:(SKView *)view {
+  
   [self mySetDeviceSuffix];
   [self setBackground];
   [self prepareRunningMusic];
@@ -60,9 +62,10 @@
 
 - (void)instr1 {
   self.stage = 1;
+  [self.nextNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
   [self fadeInWithText:@"Rob houses by tapping" andText:@"on them" withWait:NO completion:^{
     self.pointerNode.position = [self vertexWithName:@"1"].position;
-    [self.pointerNode runAction:[SKAction fadeInWithDuration:0.8]];
+    [self.pointerNode runAction:[self getFadeLoop] withKey:@"fadeLoop"];
     
   }];
   
@@ -70,7 +73,7 @@
 
 - (void)instr2 {
   self.stage = 2;
-  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
+  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION] withKey:@"fadeLoop"];
   
   [self fadeInWithText:@"Go rob the next house!" andText:@"" withWait:YES completion:^{
     [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
@@ -80,7 +83,9 @@
 
 - (void)instr3 {
   self.stage = 3;
+  
   [self fadeInWithText:@"Visited houses will have the" andText:@"door open, never go back!" withWait:YES completion:^{
+    [self.nextNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
     SKSpriteNode *v1 = [self vertexWithName:@"1"];
     self.crossNode.position = v1.position;
     [self.crossNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
@@ -90,20 +95,24 @@
 
 - (void)instr4 {
   self.stage = 4;
+  [self.nextNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
   [self.crossNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
   [self fadeInWithText:@"When you robbed all houses," andText:@"go back home" withWait:NO completion:^{
     SKSpriteNode *v0 = [self vertexWithName:@"0"];
     self.pointerNode.position = v0.position;
     self.pointerNode.alpha = 0;
-    [self.pointerNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
+    [self.pointerNode runAction:[self getFadeLoop] withKey:@"fadeLoop"];
     
   }];
 }
 
 - (void)instr5 {
   self.stage = 5;
-  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
+  
+  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION] withKey:@"fadeLoop"];
+  
   [self fadeInWithText:@"Yay, you rock!" andText:@"" withWait:YES completion:^{
+    [self.nextNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
     self.pointerNode.alpha = 0;
   }];
 }
@@ -126,29 +135,28 @@
 
 - (void)instr8 {
   self.stage = 8;
-  
+  [self.nextNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
   [self fadeInWithText:@"When you mess up," andText:@"you can use the undo button" withWait:NO completion:^{
     [self addUndoButton];
-    self.undoButton.zPosition = -1;
     [self.pointerNode removeFromParent];
     self.pointerNode = [SKSpriteNode spriteNodeWithImageNamed:@"point-down"];
     self.pointerNode.alpha = 0;
     [self.playground addChild:self.pointerNode];
     self.pointerNode.anchorPoint = CGPointMake(0, 0);
+    self.pointerNode.zPosition = FINGER_ZPOS;
     self.pointerNode.position = CGPointMake(self.undoButton.position.x - self.size.width/2, self.undoButton.position.y - self.size.height/2 + 10);
-    [self.pointerNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
+    [self.pointerNode runAction:[self getFadeLoop] withKey:@"fadeLoop"];
     
   }];
 }
 
 - (void)instr9 {
   self.stage = 9;
+  
   self.timerLabel.text = @"39";
-  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
+  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION] withKey:@"fadeLoop"];
   [self fadeInWithText:@"But this costs -2 seconds," andText:@"so use it sparingly" withWait:YES completion:^{
-    
-    
-    
+    [self.nextNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
   }];
 }
 
@@ -156,41 +164,43 @@
   self.stage = 10;
   self.pointerNode.alpha = 0;
   
-  [self fadeInWithText:@"Often, the paths get very messy" andText:@"" withWait:NO completion:^{
+  [self fadeInWithText:@"Often, it is impossible to see" andText:@"the paths clearly" withWait:NO completion:^{
     [self makeHouseMess];
   }];
 }
 
 - (void)instr11 {
   self.stage = 11;
+  [self.nextNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
   [self fadeInWithText:@"Use the reposition button to see" andText:@"everything clearly again" withWait:NO completion:^{
     [self addRepositionButton];
-    self.repositionButton.zPosition = -1;
     self.pointerNode.anchorPoint = CGPointMake(0.5, 0);
     self.pointerNode.position = CGPointMake(self.repositionButton.position.x - self.size.width/2 - 10, self.repositionButton.position.y - self.size.height/2 + 10);
-    [self.pointerNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
+    [self.pointerNode runAction:[self getFadeLoop] withKey:@"fadeLoop"];
   }];
 }
 
 - (void)instr12 {
   self.stage = 12;
-  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION]];
+  
+  [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION] withKey:@"fadeLoop"];
   self.timerLabel.text = @"38";
   [self fadeInWithText:@"Nice!" andText:@"This costs -1 seconds" withWait:YES completion:^{
+    [self.nextNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
   }];
   
 }
 
 - (void)instr13 {
   self.pointerNode.alpha = 0;
+  self.nextNode.alpha = 0;
   self.stage = 13;
   self.timerLabel.text = @"38";
   [self fadeInWithText:@"You can view the instructions again" andText:@"whenever you pause the game" withWait:NO completion:^{
     [self addPauseButton];
-    self.pauseButton.zPosition = -1;
     self.pointerNode.anchorPoint = CGPointMake(0.7, 0);
     self.pointerNode.position = CGPointMake(self.pauseButton.position.x - self.size.width/2 - 10, self.pauseButton.position.y - self.size.height/2 + 10);
-    [self.pointerNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
+    [self.pointerNode runAction:[self getFadeLoop] withKey:@"fadeLoop"];
     
   }];
   
@@ -259,7 +269,9 @@
       
     } else if (self.stage == 13) {
       SKSpriteNode *enjoy = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"12%@", self.deviceSuffix]];
+      enjoy.zPosition = PAUSE_BG_ZPOS;
       enjoy.alpha = 0;
+      self.pointerNode.alpha = 0;
       [self.playground addChild:enjoy];
       [enjoy runAction:[SKAction fadeInWithDuration:0.7] completion:^{
         self.stage = 14;
@@ -307,6 +319,10 @@
   SKSpriteNode *v0 = [self vertexWithName:@"0"];
   SKSpriteNode *v1 = [self vertexWithName:@"1"];
   SKSpriteNode *v2 = [self vertexWithName:@"2"];
+  v0.zPosition = HOUSE_ZPOS;
+  v1.zPosition = HOUSE_ZPOS;
+  v2.zPosition = HOUSE_ZPOS;
+
   
   v0.position = CGPointMake(-30, self.size.height*(-2.5/10)-20);
   v1.position = CGPointMake(100, -20);
@@ -321,12 +337,7 @@
   
   v0.position = CGPointMake(-90, 50);
   v1.position = CGPointMake(0, 0);
-  v2.position = CGPointMake(100, -30);
-  
-  SKShapeNode *edge;
-  while ((edge = (SKShapeNode *)[self.playground childNodeWithName:@"edge"])) {
-    [edge removeFromParent];
-  }
+  v2.position = CGPointMake(90, -59);
   
   [self drawEdges];
   SKSpriteNode *curPos = [self vertexWithName:[self.visitedVertices lastObject]];
@@ -338,11 +349,19 @@
   self.pointerNode = [SKSpriteNode spriteNodeWithImageNamed:@"point-up"];
   self.pointerNode.alpha = 0;
   self.pointerNode.anchorPoint = CGPointMake(0.2, 1);
+  self.pointerNode.zPosition = FINGER_ZPOS;
   [self.playground addChild:self.pointerNode];
   
   self.crossNode = [SKSpriteNode spriteNodeWithImageNamed:@"cross-forbid"];
+  self.crossNode.zPosition = FINGER_ZPOS;
   self.crossNode.alpha = 0;
   [self.playground addChild:self.crossNode];
+  
+  self.nextNode = [SKSpriteNode spriteNodeWithImageNamed:@"next-button"];
+  self.nextNode.alpha = 1;
+  self.nextNode.anchorPoint = CGPointMake(1, 0);
+  self.nextNode.position = CGPointMake(self.size.width/2-MARGIN, -self.size.height/2+MARGIN);
+  [self.playground addChild:self.nextNode];
   
   if (self.size.height > 480) {
     SKLabelNode *instructions = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
@@ -373,6 +392,14 @@
       self.readyForNext = YES;
     }];
   }];
+}
+
+- (SKAction *)getFadeLoop {
+  SKAction *fadeIn = [SKAction fadeInWithDuration:0.5];
+  SKAction *wait = [SKAction waitForDuration:0.5];
+  SKAction *fadeOut = [SKAction fadeOutWithDuration:0.5];
+  SKAction *sequence = [SKAction sequence:@[fadeIn, wait,fadeOut, fadeIn, wait, fadeOut, fadeIn]];
+  return sequence;
 }
 
 

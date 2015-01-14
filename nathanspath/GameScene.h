@@ -33,6 +33,7 @@
 @property (nonatomic, strong) SKSpriteNode *backButton;
 @property (nonatomic, strong) SKLabelNode *quitButton;
 @property (nonatomic, strong) SKLabelNode *instructionsButton;
+@property (nonatomic, strong) SKLabelNode *changeStyleButton;
 
 
 
@@ -52,6 +53,7 @@
 //game config
 @property NSInteger sizeChangeLevel; //level for size change
 
+@property BOOL edgeUp;
 
 
 - (void)playButtonSound;
@@ -71,5 +73,6 @@
 - (void)positionVertices;
 - (SKSpriteNode *)vertexWithName:(NSString *)name;
 - (void)emitFlashWithMessage:(NSString *)message forDuration:(CGFloat)duration;
+- (void)changeEdgeZPos;
 
 @end

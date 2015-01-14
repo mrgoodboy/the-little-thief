@@ -58,6 +58,7 @@
 
 - (void)didMoveToView:(SKView *)view {
   [self mySetDeviceSuffix];
+  self.edgeUp = [[NSUserDefaults standardUserDefaults] boolForKey:@"EdgeUp"];
   
   if (self.onlyInstructions) {
     if (self.inInstructions) {
@@ -157,6 +158,7 @@
 - (void)addNathan {
   self.nathan = [SKSpriteNode spriteNodeWithImageNamed:@"undo-button"];
   self.nathan.alpha = 0.0;
+  self.nathan.zPosition = self.edgeUp ? NATHAN1_HIGH_ZPOS : NATHAN1_LOW_ZPOS;
   [self.playground addChild:self.nathan];
 }
 
@@ -205,7 +207,7 @@
   }
   
   bg.position = CGPointMake(self.size.width/2, self.size.height/2);
-  bg.zPosition = -10.0;
+  bg.zPosition = BG_ZPOS;
   [self addChild:bg];
   
 }
@@ -290,7 +292,7 @@
       position.y -= badTopOffset;
       
     }
-
+    
     vertex.position = position;
     
     SKSpriteNode *curPos = [self vertexWithName:[self.visitedVertices lastObject]];
@@ -311,6 +313,7 @@
       vertex = [SKSpriteNode spriteNodeWithTexture:houseTexture];
     }
     vertex.name = [NSString stringWithFormat:@"%d", i];
+    vertex.zPosition = HOUSE_ZPOS;
     
     [self.playground addChild:vertex];
     [self.vertices addObject:vertex.name];
@@ -352,6 +355,11 @@
 }
 
 - (void)drawEdges {
+  SKShapeNode *edge;
+  while ((edge = (SKShapeNode *)[self.playground childNodeWithName:@"edge"])) {
+    [edge removeFromParent];
+  }
+  
   NSMutableDictionary *added = [[NSMutableDictionary alloc] init];
   for (NSString *vertexName in self.edges) {
     
@@ -368,7 +376,7 @@
       CGPathMoveToPoint(pathToDraw, NULL, originPoint.x, originPoint.y);
       CGPathAddLineToPoint(pathToDraw, NULL, destinationPoint.x, destinationPoint.y);
       edge.path = pathToDraw;
-      edge.zPosition = -9;
+      edge.zPosition = self.edgeUp ? EDGE_HIGH_ZPOS : EDGE_LOW_ZPOS;
       if (self.level > 30)
         [edge setStrokeColor:[SKColor lightGrayColor]];
       else
@@ -416,7 +424,7 @@
                          [SKAction animateWithTextures:textures
                                           timePerFrame:0.1f resize:NO restore:YES]];
   if (self.direction == 1) {
-    self.nathan.zPosition = -1;
+    self.nathan.zPosition = self.edgeUp ? NATHAN2_HIGH_ZPOS : NATHAN2_LOW_ZPOS;
   }
   [self.directionHistory addObject:[NSNumber numberWithLong:self.direction]];
   
@@ -436,7 +444,7 @@
     [self checkWin];
     SKTexture *currentHouse = [SKTexture textureWithImageNamed:[self houseWithAppendix:@"house-c"]];
     [self changeTextureOfVertex:vertexName toTexture:currentHouse];
-    self.nathan.zPosition = 0;
+    self.nathan.zPosition = self.edgeUp ? NATHAN1_HIGH_ZPOS : NATHAN1_LOW_ZPOS;
   }];
 }
 
@@ -456,7 +464,7 @@
   SKAction *undoSound = [SKAction playSoundFileNamed:@"undo-move.wav" waitForCompletion:NO];
   [self.nathan runAction:undoSound];
   [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)UNDO_PENALTY]];
-
+  
   
   self.startTime -= UNDO_PENALTY;
   
@@ -481,7 +489,7 @@
     self.direction = 3;
   
   NSArray *textures = [self getTexturesFromDirection:offset];
-
+  
   SKAction *runAction = [SKAction repeatActionForever:
                          [SKAction animateWithTextures:textures
                                           timePerFrame:0.1f resize:NO restore:YES]];
@@ -493,7 +501,7 @@
   SKAction *fadeOut = [SKAction fadeAlphaTo:0.0 duration:FADE_OUT_DURATION];
   SKAction *sequence = [SKAction sequence :@[leaveGroup, fadeOut]];
   [self.nathan runAction:sequence completion:^{
-
+    
     self.nathan.position = newVertex.position;
   }];
   
@@ -517,9 +525,7 @@
   self.startTime -= REDRAW_PENALTY;
   [self emitFlashWithMessage:[NSString stringWithFormat:@"-%d", (int)REDRAW_PENALTY]];
   
-  SKNode *edge;
-  while ((edge = [self.playground childNodeWithName:@"edge"]))
-    [edge removeFromParent];
+
   [self positionVertices];
   [self drawEdges];
 }
@@ -541,19 +547,24 @@
         [self backToIntro];
         [self playButtonSound];
         return;
+      } else if ([self.changeStyleButton containsPoint:touchPoint]) {
+        [self playButtonSound];
+        [self changeEdgeZPos];
+        [self resumeGame];
+        return;
       }
-    
+      
     } else {
       
-//      WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
-//      wonScene.nextLevel = self.level + 1;
-//      [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:FADE_OUT_DURATION]];
-
+      //      WonScene *wonScene = [[WonScene alloc] initWithSize:self.size];
+      //      wonScene.nextLevel = self.level + 1;
+      //      [self.view presentScene:wonScene transition:[SKTransition fadeWithDuration:FADE_OUT_DURATION]];
+      
       
       touchPoint = [touch locationInNode:self];
       if ([self.undoButton containsPoint:touchPoint]) {
         [self undoMove];
-
+        
         return;
       } else if ([self.repositionButton containsPoint:touchPoint]) {
         [self repositionVertices];
@@ -563,7 +574,7 @@
         return;
       }
       
-     
+      
       NSString *currentVertexName = [self.visitedVertices lastObject];
       SKSpriteNode *currentVertex = [self vertexWithName:currentVertexName];
       for (NSString *vertexName in self.vertices) {
@@ -628,34 +639,45 @@
   [self playButtonSound];
   self.inGame = NO;
   self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"transition-screen%@", self.deviceSuffix]];
-  self.pauseBg.zPosition = 5;
+  self.pauseBg.zPosition = PAUSE_BG_ZPOS;
   self.pauseBg.position = CGPointMake(self.size.width/2, self.size.height/2);
   [self addChild:self.pauseBg];
   
   CGFloat deviceHeight = self.size.height;
   CGFloat deviceWidth = self.size.width;
   
+  CGFloat deviceHeightOffset = deviceHeight <= 480 ? 20 : 0;
+  
   self.backButton = [SKSpriteNode spriteNodeWithImageNamed:@"back-button"];
   self.backButton.anchorPoint = CGPointMake(0.0, 1.0);
   self.backButton.position = CGPointMake(-deviceWidth/2 + MARGIN, deviceHeight/2 - MARGIN);
-  self.backButton.zPosition = 6;
+  self.backButton.zPosition = PAUSE_BUTTONS_ZPOS;
   [self.pauseBg addChild:self.backButton];
   
   self.quitButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   self.quitButton.fontColor = [SKColor whiteColor];
   self.quitButton.fontSize = 40.0;
   self.quitButton.text = @"Quit Game";
-  self.quitButton.position = CGPointMake(0, -35);
-  self.quitButton.zPosition = 6;
+  self.quitButton.position = CGPointMake(0, -60 - deviceHeightOffset);
+  self.quitButton.zPosition = PAUSE_BUTTONS_ZPOS;
   [self.pauseBg addChild:self.quitButton];
   
   self.instructionsButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   self.instructionsButton.fontColor = [SKColor whiteColor];
   self.instructionsButton.fontSize = 40.0;
   self.instructionsButton.text = @"Instructions";
-  self.instructionsButton.position = CGPointMake(0, 35);
-  self.instructionsButton.zPosition = 6;
+  self.instructionsButton.position = CGPointMake(0, 10 - deviceHeightOffset);
+  self.instructionsButton.zPosition = PAUSE_BUTTONS_ZPOS;
   [self.pauseBg addChild:self.instructionsButton];
+  
+  self.changeStyleButton = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
+  self.changeStyleButton.fontColor = [SKColor whiteColor];
+  self.changeStyleButton.fontSize = 40.0;
+  self.changeStyleButton.text = @"Change Path Style";
+  self.changeStyleButton.position = CGPointMake(0, 80 - deviceHeightOffset);
+  self.changeStyleButton.zPosition = PAUSE_BUTTONS_ZPOS;
+  [self.pauseBg addChild:self.changeStyleButton];
+  
   NSString *hs = [[NSUserDefaults standardUserDefaults] objectForKey:@"HighScore"];
   if (hs) {
     SKLabelNode *highScore = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
@@ -664,12 +686,12 @@
     highScore.text = [NSString stringWithFormat:@"High score: lvl %@", hs];
     highScore.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
     highScore.position = CGPointMake(0, self.pauseBg.size.height/2 - MARGIN -10);
-    highScore.zPosition = 6;
+    highScore.zPosition = PAUSE_BUTTONS_ZPOS;
     [self.pauseBg addChild:highScore];
   }
-
   
-
+  
+  
 }
 
 - (void)resumeGame {
@@ -707,7 +729,7 @@
     if (self.bonusSeconds)
       self.startTime += self.bonusSeconds;
   }
-
+  
   if (self.inGame) {
     
     int countDownInt = (int)(currentTime - self.startTime);
@@ -795,7 +817,7 @@
 - (void)emitFlashWithMessage:(NSString *)message forDuration:(CGFloat)duration {
   SKLabelNode *messageLabel = [SKLabelNode labelNodeWithFontNamed:@"SueEllenFrancisco"];
   messageLabel.fontSize = 40;
-  messageLabel.zPosition = 20;
+  messageLabel.zPosition = MESSAGE_ZPOS;
   messageLabel.fontColor = [LittleThiefConfig yellow];
   messageLabel.position = CGPointMake(self.size.width/2, self.size.height/2);
   messageLabel.text = message;
@@ -840,6 +862,14 @@
 - (void)playErrorSound {
   SKAction *errorSound = [SKAction playSoundFileNamed:@"error.wav" waitForCompletion:NO];
   [self runAction:errorSound];
+}
+
+- (void)changeEdgeZPos {
+  self.edgeUp = !self.edgeUp;
+  [self drawEdges];
+  [[NSUserDefaults standardUserDefaults] setBool:self.edgeUp forKey:@"EdgeUp"];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+  
 }
 
 

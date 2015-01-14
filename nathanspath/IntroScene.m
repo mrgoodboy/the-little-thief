@@ -48,6 +48,7 @@
   else
   {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"EdgeUp"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     self.backgroundColor = [SKColor blackColor];

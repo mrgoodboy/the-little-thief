@@ -22,6 +22,28 @@
 #define FB_IMAGE_URL @"http://zyxlabs.com/static/img/fb-nathan.png"
 #define FB_APPLINK @"https://fb.me/792852697416569"
 
+
+
+//zPositions
+#define HOUSE_ZPOS 1
+
+#define NATHAN1_HIGH_ZPOS 3
+#define NATHAN2_HIGH_ZPOS 3
+
+#define NATHAN1_LOW_ZPOS 3
+#define NATHAN2_LOW_ZPOS 0
+
+#define EDGE_HIGH_ZPOS 2
+#define EDGE_LOW_ZPOS -1
+
+#define FINGER_ZPOS 4
+
+#define PAUSE_BG_ZPOS 8
+#define PAUSE_BUTTONS_ZPOS 9
+#define MESSAGE_ZPOS 20
+#define BG_ZPOS -10
+
+
 + (SKColor *)yellow;
 + (SKColor *)darkBlue;
 + (SKColor *)red;
