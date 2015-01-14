@@ -154,7 +154,7 @@
   
   self.timerLabel.text = @"39";
   [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION] withKey:@"fadeLoop"];
-  [self fadeInWithText:@"But this costs -2 seconds," andText:@"so use it sparingly" withWait:YES completion:^{
+  [self fadeInWithText:@"But this costs 2 seconds," andText:@"so use it sparingly" withWait:YES completion:^{
     [self.nextNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
   }];
 }
@@ -184,7 +184,7 @@
   
   [self.pointerNode runAction:[SKAction fadeOutWithDuration:FADE_DURATION] withKey:@"fadeLoop"];
   self.timerLabel.text = @"38";
-  [self fadeInWithText:@"Nice!" andText:@"This costs -1 seconds" withWait:YES completion:^{
+  [self fadeInWithText:@"Nice!" andText:@"This costs 1 second" withWait:YES completion:^{
     [self.nextNode runAction:[SKAction fadeInWithDuration:FADE_DURATION]];
   }];
   
