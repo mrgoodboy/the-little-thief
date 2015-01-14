@@ -19,7 +19,6 @@
 @property (nonatomic, strong) SKSpriteNode *pointerNode;
 @property (nonatomic, strong) SKSpriteNode *crossNode;
 @property (nonatomic, strong) SKSpriteNode *nextNode;
-@property BOOL startCounting;
 @property BOOL readyForNext;
 @end
 @implementation InstructionsScene
@@ -196,7 +195,7 @@
   self.nextNode.alpha = 0;
   self.stage = 13;
   self.timerLabel.text = @"38";
-  [self fadeInWithText:@"You can view the instructions again" andText:@"whenever you pause the game" withWait:NO completion:^{
+  [self fadeInWithText:@"You can view the instructions again" andText:@"whenever  you pause the game" withWait:NO completion:^{
     [self addPauseButton];
     self.pointerNode.anchorPoint = CGPointMake(0.7, 0);
     self.pointerNode.position = CGPointMake(self.pauseButton.position.x - self.size.width/2 - 10, self.pauseButton.position.y - self.size.height/2 + 10);
