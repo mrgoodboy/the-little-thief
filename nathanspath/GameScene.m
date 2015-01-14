@@ -638,7 +638,8 @@
 - (void)pauseGame {
   [self playButtonSound];
   self.inGame = NO;
-  self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"transition-screen%@", self.deviceSuffix]];
+//  self.pauseBg = [SKSpriteNode spriteNodeWithImageNamed:[NSString stringWithFormat:@"transition-screen%@", self.deviceSuffix]];
+  self.pauseBg = [SKSpriteNode spriteNodeWithColor:[LittleThiefConfig darkBlue] size:self.size];
   self.pauseBg.zPosition = PAUSE_BG_ZPOS;
   self.pauseBg.position = CGPointMake(self.size.width/2, self.size.height/2);
   [self addChild:self.pauseBg];
@@ -646,7 +647,6 @@
   CGFloat deviceHeight = self.size.height;
   CGFloat deviceWidth = self.size.width;
   
-  CGFloat deviceHeightOffset = deviceHeight <= 480 ? 20 : 0;
   
   self.backButton = [SKSpriteNode spriteNodeWithImageNamed:@"back-button"];
   self.backButton.anchorPoint = CGPointMake(0.0, 1.0);
@@ -658,7 +658,7 @@
   self.quitButton.fontColor = [SKColor whiteColor];
   self.quitButton.fontSize = 40.0;
   self.quitButton.text = @"Quit Game";
-  self.quitButton.position = CGPointMake(0, -60 - deviceHeightOffset);
+  self.quitButton.position = CGPointMake(0, -100);
   self.quitButton.zPosition = PAUSE_BUTTONS_ZPOS;
   [self.pauseBg addChild:self.quitButton];
   
@@ -666,7 +666,7 @@
   self.instructionsButton.fontColor = [SKColor whiteColor];
   self.instructionsButton.fontSize = 40.0;
   self.instructionsButton.text = @"Instructions";
-  self.instructionsButton.position = CGPointMake(0, 10 - deviceHeightOffset);
+  self.instructionsButton.position = CGPointMake(0, -30);
   self.instructionsButton.zPosition = PAUSE_BUTTONS_ZPOS;
   [self.pauseBg addChild:self.instructionsButton];
   
@@ -674,7 +674,7 @@
   self.changeStyleButton.fontColor = [SKColor whiteColor];
   self.changeStyleButton.fontSize = 40.0;
   self.changeStyleButton.text = @"Change Path Style";
-  self.changeStyleButton.position = CGPointMake(0, 80 - deviceHeightOffset);
+  self.changeStyleButton.position = CGPointMake(0, 40);
   self.changeStyleButton.zPosition = PAUSE_BUTTONS_ZPOS;
   [self.pauseBg addChild:self.changeStyleButton];
   
